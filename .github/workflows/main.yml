@@ -12,8 +12,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      with:
-        lfs: "true"
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -34,5 +32,5 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Run Selenium script
-      run: main.py
+      run: python ./main.py
 
