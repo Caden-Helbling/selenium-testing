@@ -2,9 +2,13 @@
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+
+options = Options()
+options.headless = True
 
 # Set browser driver
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=options)
 
 # Load webpage
 driver.get("https://www.selenium.dev/")
