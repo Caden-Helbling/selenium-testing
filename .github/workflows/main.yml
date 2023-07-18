@@ -1,0 +1,36 @@
+name: Selenium Web Scraping
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run_selenium:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install ChromeDriver
+      run: |
+        CHROME_VERSION=$(google-chrome --product-version | cut -d . -f 1)
+        CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION})
+        curl -sS -o chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip -d $RUNNER_TEMP
+        chmod +x $RUNNER_TEMP/chromedriver
+        sudo mv $RUNNER_TEMP/chromedriver /usr/local/bin/chromedriver
+        rm chromedriver_linux64.zip
+
+    - name: Install Python dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run Selenium script
+      run: main.py
+
