@@ -19,6 +19,6 @@ driver.implicitly_wait(3)
 my_element.click()
 
 # Select a line of text and print it
-text = driver.find_element(By.XPATH, '/html/body/div/main/div[2]/div/div/p[1]')
+text = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/section/div/div/div/p[1]')
 words = text.text
 print(words)
