@@ -34,57 +34,75 @@ class PageValidationException(Exception):
             message += f"Expected text: {self.text_mismatch[1]}\n"
 
         return message
-    
-# Set browser driver
-driver = webdriver.Chrome(options=options)
 
-# Load webpage
-driver.get("https://deploy-preview-13--ghg-demo.netlify.app/")
+# Function to perform the validation
+def perform_validation():
+    # Set browser driver
+    driver = webdriver.Chrome(options=options)
 
-# Enter password and hit enter to sign in
-password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
-password_input.send_keys("partnership")
-password_input.send_keys(Keys.ENTER)
+    # Load webpage
+    driver.get("https://deploy-preview-13--ghg-demo.netlify.app/")
 
-# Wait for page to load
-driver.implicitly_wait(5)
+    # Enter password and hit enter to sign in
+    password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
+    password_input.send_keys("partnership")
+    password_input.send_keys(Keys.ENTER)
 
-# Load data from .json
-with open('ui_data.json') as json_file:
-    data = json.load(json_file)
+    # Wait for page to load
+    driver.implicitly_wait(5)
 
-# Check first paragraph text
-text = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[2]/div/p[1]')
-retrieved_text = text.text
-expected_text = data["text"]
+    # Load data from .json
+    with open('ui_data.json') as json_file:
+        data = json.load(json_file)
 
-# Check logos
-# List of image src URLs to check
-logo_src_list = data["logos"]
+    # Check first paragraph text
+    text = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[2]/div/p[1]')
+    retrieved_text = text.text
+    expected_text = data["text"]
 
-missing_logos = []
+    # Check logos
+    # List of image src URLs to check
+    logo_src_list = data["logos"]
 
-# Check if each image is present on the page
-for src in logo_src_list:
-    image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
-    if not image_element:
-        missing_logos.append(src)
+    missing_logos = []
 
-driver.get("https://deploy-preview-13--ghg-demo.netlify.app/data-catalog")
+    # Check if each image is present on the page
+    for src in logo_src_list:
+        image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
+        if not image_element:
+            missing_logos.append(src)
 
-catalog_list = data["catalogs"]
-missing_catalogs = []
+    driver.get("https://deploy-preview-13--ghg-demo.netlify.app/data-catalog")
 
-for catalog in catalog_list:
+    catalog_list = data["catalogs"]
+    missing_catalogs = []
+
+    for catalog in catalog_list:
+        try:
+            title_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
+        except NoSuchElementException:
+            missing_catalogs.append(catalog)
+
+    driver.quit()
+
+    # Raise exception if any validation fails
+    if retrieved_text != expected_text or missing_logos or missing_catalogs:
+        raise PageValidationException(missing_logos=missing_logos, missing_catalogs=missing_catalogs, text_mismatch=None if retrieved_text == expected_text else (retrieved_text, expected_text))
+    else:
+        print("Validation successful. All elements are present on the page.")
+
+
+# Number of retries
+max_retries = 3
+
+for retry in range(max_retries):
     try:
-        title_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
-    except NoSuchElementException:
-        missing_catalogs.append(catalog)
-
-driver.quit()
-
-# Raise exception if any validation fails
-if retrieved_text != expected_text or missing_logos or missing_catalogs:
-    raise PageValidationException(missing_logos=missing_logos, missing_catalogs=missing_catalogs, text_mismatch=None if retrieved_text == expected_text else (retrieved_text, expected_text))
-else:
-    print("Validation successful. All elements are present on the page.")
+        perform_validation()
+        break  # If validation is successful, break out of the loop
+    except PageValidationException as e:
+        if retry < max_retries - 1:
+            print("Validation failed. Retrying...")
+            continue
+        else:
+            # Max retries reached, raise the exception again
+            raise e
