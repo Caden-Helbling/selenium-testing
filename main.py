@@ -31,7 +31,7 @@ logo_src_list = [
     "https://deploy-preview-13--ghg-demo.netlify.app/nasa.5cf6faef.png",
     "https://deploy-preview-13--ghg-demo.netlify.app/nist.13219e63.png",
     "https://deploy-preview-13--ghg-demo.netlify.app/noaa.df5d210a.png",
-    "https://deploy-preview-13--ghg-demo.netlify.app/fake.df5d210a.png"
+    # "https://deploy-preview-13--ghg-demo.netlify.app/fake.df5d210a.png"
     # Add more image URLs as needed
 ]
 
