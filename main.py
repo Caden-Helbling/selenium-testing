@@ -7,6 +7,27 @@ from selenium.webdriver.common.keys import Keys
 options = Options()
 options.add_argument('--headless')
 
+# Class to handle errors
+class PageValidationException(Exception):
+    def __init__(self, missing_logos=None, text_mismatch=None):
+        self.missing_logos = missing_logos
+        self.text_mismatch = text_mismatch
+
+    def __str__(self):
+        message = "Page validation failed:\n"
+
+        if self.missing_logos:
+            message += "Missing logos:\n"
+            for logo in self.missing_logos:
+                message += f"  {logo}\n"
+
+        if self.text_mismatch:
+            message += "Text mismatch:\n"
+            message += f"Retrieved text: {self.text_mismatch[0]}\n"
+            message += f"Expected text: {self.text_mismatch[1]}\n"
+
+        return message
+    
 # Set browser driver
 driver = webdriver.Chrome(options=options)
 
@@ -33,26 +54,6 @@ expected_text = data["text"]
 # Check logos
 # List of image src URLs to check
 logo_src_list = data["logos"]
-
-class PageValidationException(Exception):
-    def __init__(self, missing_logos=None, text_mismatch=None):
-        self.missing_logos = missing_logos
-        self.text_mismatch = text_mismatch
-
-    def __str__(self):
-        message = "Page validation failed:\n"
-
-        if self.missing_logos:
-            message += "Missing logos:\n"
-            for logo in self.missing_logos:
-                message += f"  {logo}\n"
-
-        if self.text_mismatch:
-            message += "Text mismatch:\n"
-            message += f"Retrieved text: {self.text_mismatch[0]}\n"
-            message += f"Expected text: {self.text_mismatch[1]}\n"
-
-        return message
 
 missing_logos = []
 
