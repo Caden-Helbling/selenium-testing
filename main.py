@@ -40,6 +40,19 @@ class PageValidationException(Exception):
         self.missing_logos = missing_logos
         self.text_mismatch = text_mismatch
 
+    def __str__(self):
+        message = "Page validation failed:\n"
+
+        if self.missing_logos:
+            message += "Missing logos:\n"
+            for logo in self.missing_logos:
+                message += f"  {logo}\n"
+
+        if self.text_mismatch:
+            message += f"Text mismatch. Retrieved text: {self.text_mismatch[0]}\nExpected text: {self.text_mismatch[1]}\n"
+
+        return message
+
 missing_logos = []
 
 # Check if each image is present on the page
