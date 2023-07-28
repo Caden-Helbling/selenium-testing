@@ -45,6 +45,10 @@ logo_src_list = [
     # Add more image URLs as needed
 ]
 
+class MissingLogosException(Exception):
+    def __init__(self, missing_logos):
+        self.missing_logos = missing_logos
+
 missing_logos = []
 
 # Check if each image is present on the page
@@ -58,6 +62,9 @@ if missing_logos:
     for src in missing_logos:
         print(src)
 else:
-    print("All images are present on the page.")
+    print("All logos are present on the page.")
 
 driver.quit()
+
+if missing_logos:
+    raise MissingLogosException(missing_logos)
