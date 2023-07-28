@@ -35,11 +35,28 @@ else:
     print("Text matches the expected value.")
 
 # Check logos
-logo_elements = driver.find_elements(By.XPATH, "//img[@alt='EPA logo']")  # Replace 'Logo' with the alt text of the logo
+# List of image src URLs to check
+logo_src_list = [
+    "https://deploy-preview-13--ghg-demo.netlify.app/epa.17d0873a.svg",
+    "https://deploy-preview-13--ghg-demo.netlify.app/nasa.5cf6faef.png",
+    "https://deploy-preview-13--ghg-demo.netlify.app/nist.13219e63.png",
+    "https://deploy-preview-13--ghg-demo.netlify.app/noaa.df5d210a.png"
+    # Add more image URLs as needed
+]
 
-if len(logo_elements) > 0:
-    print("Logo is present on the page.")
+missing_logos = []
+
+# Check if each image is present on the page
+for src in logo_src_list:
+    image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
+    if not image_element:
+        missing_logos.append(src)
+
+if missing_logos:
+    print("The following images are missing on the page:")
+    for src in missing_logos:
+        print(src)
 else:
-    print("Logo is not present on the page.")
-
+    print("All images are present on the page.")
+    
 driver.quit()
