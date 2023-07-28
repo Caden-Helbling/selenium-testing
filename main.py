@@ -21,7 +21,7 @@ password_input.send_keys(Keys.ENTER)
 
 driver.implicitly_wait(5)
 
-text = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[1]/div/div[2]/p')
+text = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[2]/div/p[1]')
 words = text.text
 print("Returned text: " + words)
 
