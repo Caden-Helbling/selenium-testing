@@ -21,6 +21,7 @@ password_input.send_keys(Keys.ENTER)
 
 driver.implicitly_wait(5)
 
+# Check first paragraph text
 text = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[2]/div/p[1]')
 retrieved_text = text.text
 expected_text = "Welcome to the U.S. GHG Center, your one-stop destination for all things related to greenhouse gas emissions! Our website offers a vast collection of datasets that are designed to help researchers, policymakers, and concerned citizens understand and mitigate the effects of climate change. Our team of experts has curated and compiled the most up-to-date and comprehensive data on greenhouse gas emissions from various sources, such as industry, transportation, and agriculture."
@@ -33,14 +34,12 @@ if retrieved_text != expected_text:
 else:
     print("Text matches the expected value.")
 
+# Check logos
+logo_elements = driver.find_elements(By.XPATH, "//img[@alt='EPA logo']")  # Replace 'Logo' with the alt text of the logo
+
+if len(logo_elements) > 0:
+    print("Logo is present on the page.")
+else:
+    print("Logo is not present on the page.")
+
 driver.quit()
-
-# # Search for link to downloads page & wait for it to be clickable before clicking
-# my_element = driver.find_element(By.XPATH, '//*[@id="main_navbar"]/ul/li[3]/a/span')
-# driver.implicitly_wait(3)
-# my_element.click()
-
-# # Select a line of text and print it
-# text = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/section/div/div/div/p[1]')
-# words = text.text
-# print("Returned text: " + words)
