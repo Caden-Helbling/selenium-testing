@@ -75,8 +75,9 @@ catalog_list = data["catalogs"]
 missing_catalogs = []
 
 for catalog in catalog_list:
-    title_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
-    if not title_element:
+    try:
+        title_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
+    except NoSuchElementException:
         missing_catalogs.append(catalog)
 
 driver.quit()
