@@ -72,8 +72,10 @@ def perform_validation():
         if not image_element:
             missing_logos.append(src)
 
+    # Navigate to catalog page
     driver.get("https://deploy-preview-13--ghg-demo.netlify.app/data-catalog")
 
+    # Check if catalogs are present
     catalog_list = data["catalogs"]
     missing_catalogs = []
 
