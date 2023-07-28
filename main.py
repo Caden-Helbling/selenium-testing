@@ -1,3 +1,4 @@
+import json
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -17,23 +18,21 @@ password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/i
 password_input.send_keys("partnership")
 password_input.send_keys(Keys.ENTER)
 
+# Wait for page to load
 driver.implicitly_wait(5)
+
+# Load data from .json
+with open('data.json') as json_file:
+    data = json.load(json_file)
 
 # Check first paragraph text
 text = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[2]/div/p[1]')
 retrieved_text = text.text
-expected_text = "Welcome to the U.S. GHG Center, your one-stop destination for all things related to greenhouse gas emissions! Our website offers a vast collection of datasets that are designed to help researchers, policymakers, and concerned citizens understand and mitigate the effects of climate change. Our team of experts has curated and compiled the most up-to-date and comprehensive data on greenhouse gas emissions from various sources, such as industry, transportation, and agriculture."
+expected_text = data["text"]
 
 # Check logos
 # List of image src URLs to check
-logo_src_list = [
-    "https://deploy-preview-13--ghg-demo.netlify.app/epa.17d0873a.svg",
-    "https://deploy-preview-13--ghg-demo.netlify.app/nasa.5cf6faef.png",
-    "https://deploy-preview-13--ghg-demo.netlify.app/nist.13219e63.png",
-    "https://deploy-preview-13--ghg-demo.netlify.app/noaa.df5d210a.png",
-    # "https://deploy-preview-13--ghg-demo.netlify.app/fake.df5d210a.png"
-    # Add more image URLs as needed
-]
+logo_src_list = data["logos"]
 
 class PageValidationException(Exception):
     def __init__(self, missing_logos=None, text_mismatch=None):
