@@ -49,7 +49,9 @@ class PageValidationException(Exception):
                 message += f"  {logo}\n"
 
         if self.text_mismatch:
-            message += f"Text mismatch. Retrieved text: {self.text_mismatch[0]}\nExpected text: {self.text_mismatch[1]}\n"
+            message += "Text mismatch:\n"
+            message += f"Retrieved text: {self.text_mismatch[0]}\n"
+            message += f"Expected text: {self.text_mismatch[1]}\n"
 
         return message
 
@@ -65,6 +67,6 @@ driver.quit()
 
 # Raise exception if any validation fails
 if retrieved_text != expected_text or missing_logos:
-    raise PageValidationException(missing_logos=missing_logos, text_mismatch=(retrieved_text, expected_text))
+    raise PageValidationException(missing_logos=missing_logos, text_mismatch=None if retrieved_text == expected_text else (retrieved_text, expected_text))
 else:
     print("Validation successful. All elements are present on the page.")
