@@ -64,7 +64,7 @@ for src in logo_src_list:
 
 driver.get("https://deploy-preview-13--ghg-demo.netlify.app/data-catalog")
 
-title_text = "CH4 Wetland Emissions (LPJ-wsl)"
+title_text = "CH4 Wetland Emissions"
 
 title_element = driver.find_element(By.XPATH, f'//h3[text()="{title_text}"]')
 print("The title exists:", title_element.text)
