@@ -48,11 +48,10 @@ for src in logo_src_list:
     if not image_element:
         missing_logos.append(src)
 
+driver.quit()
+
 # Raise exception if any validation fails
 if retrieved_text != expected_text or missing_logos:
-    driver.quit()
     raise PageValidationException(missing_logos=missing_logos, text_mismatch=(retrieved_text, expected_text))
-
-print("Validation successful. All elements are present on the page.")
-
-driver.quit()
+else:
+    print("Validation successful. All elements are present on the page.")
