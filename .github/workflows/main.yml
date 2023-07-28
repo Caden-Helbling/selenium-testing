@@ -21,7 +21,7 @@ jobs:
 
     - name: Install ChromeDriver
       run: |
-        CHROME_VERSION=$(google-chrome --product-version | cut -d . -f 1
+        CHROME_VERSION=$(google-chrome --product-version | cut -d . -f 1)
         echo $CHROME_VERSION
         CHROME_VERSION_LESS_ONE=$((CHROME_VERSION - 1))
         CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION_LESS_ONE})
