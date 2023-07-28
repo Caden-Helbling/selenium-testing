@@ -22,7 +22,7 @@ password_input.send_keys(Keys.ENTER)
 driver.implicitly_wait(5)
 
 # Load data from .json
-with open('data.json') as json_file:
+with open('ui_data.json') as json_file:
     data = json.load(json_file)
 
 # Check first paragraph text
@@ -61,6 +61,13 @@ for src in logo_src_list:
     image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
     if not image_element:
         missing_logos.append(src)
+
+driver.get("https://deploy-preview-13--ghg-demo.netlify.app/data-catalog")
+
+title_text = "CH4 Wetland Emissions (LPJ-wsl)"
+
+title_element = driver.find_element(By.XPATH, f'//h3[text()="{title_text}"]')
+print("The title exists:", title_element.text)
 
 driver.quit()
 
