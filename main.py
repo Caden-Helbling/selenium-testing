@@ -66,7 +66,7 @@ driver.get("https://deploy-preview-13--ghg-demo.netlify.app/data-catalog")
 
 title_text = "CH4 Wetland Emissions"
 
-title_element = driver.find_element(By.XPATH, f'//h3[contains(text()="{title_text}")]')
+title_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{title_text}")]')
 print("The title exists:", title_element.text)
 
 driver.quit()
