@@ -8,6 +8,7 @@ on:
 
 jobs:
   Selenium_UI_Testing:
+    name: Selenium UI Testing 🧑‍💻️
     runs-on: ubuntu-latest
 
     steps:
