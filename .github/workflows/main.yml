@@ -1,4 +1,4 @@
-name: Selenium Web Scraping
+name: Selenium UI Testing 🧑‍💻️
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run_selenium:
+  Selenium_UI_Testing:
     runs-on: ubuntu-latest
 
     steps:
