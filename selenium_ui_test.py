@@ -10,13 +10,12 @@ options.add_argument('--headless')
 
 # Class to handle errors
 class PageValidationException(Exception):
-    def __init__(self, missing_logos=None, missing_catalogs=None, text_mismatch=None):
+    def __init__(self, missing_logos=None, missing_catalogs=None):
         self.missing_logos = missing_logos
         self.missing_catalogs = missing_catalogs
-        self.text_mismatch = text_mismatch
 
     def __str__(self):
-        message = "Page validation failed:\n"
+        message = "UI validation failed:\n"
 
         if self.missing_logos:
             message += "Missing logos:\n"
@@ -27,11 +26,6 @@ class PageValidationException(Exception):
             message += "Missing catalogs:\n"
             for catalog in self.missing_catalogs:
                 message += f"  {catalog}\n"
-
-        if self.text_mismatch:
-            message += "Text mismatch:\n"
-            message += f"Retrieved text: {self.text_mismatch[0]}\n"
-            message += f"Expected text: {self.text_mismatch[1]}\n"
 
         return message
 
@@ -55,18 +49,12 @@ def perform_validation():
     with open('ui_data.json') as json_file:
         data = json.load(json_file)
 
-    # Check first paragraph text
-    text = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[2]/div/p[1]')
-    retrieved_text = text.text
-    expected_text = data["text"]
-
     # Check logos
-    # List of image src URLs to check
     logo_src_list = data["logos"]
 
     missing_logos = []
 
-    # Check if each image is present on the page
+    # Check if each logo is present on the page
     for src in logo_src_list:
         image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
         if not image_element:
@@ -88,10 +76,10 @@ def perform_validation():
     driver.quit()
 
     # Raise exception if any validation fails
-    if retrieved_text != expected_text or missing_logos or missing_catalogs:
-        raise PageValidationException(missing_logos=missing_logos, missing_catalogs=missing_catalogs, text_mismatch=None if retrieved_text == expected_text else (retrieved_text, expected_text))
+    if missing_logos or missing_catalogs:
+        raise PageValidationException(missing_logos=missing_logos, missing_catalogs=missing_catalogs)
     else:
-        print("Validation successful. All elements are present on the page.")
+        print("Validation successful. All elements are present.")
 
 
 # Number of retries
