@@ -31,12 +31,13 @@ class PageValidationException(Exception):
         return message
 
 # Function to perform the validation
-def perform_validation():
+def perform_validation(dashboard_base_url):
     # Set browser driver
     driver = webdriver.Chrome(options=options)
-
+    # remove the tailing /
+    dashboard_base_url = dashboard_base_url.rstrip('/')
     # Load webpage
-    driver.get("https://deploy-preview-13--ghg-demo.netlify.app/")
+    driver.get(dashboard_base_url) #"https://deploy-preview-13--ghg-demo.netlify.app/")
 
     # Enter password and hit enter to sign in
     password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
@@ -62,7 +63,7 @@ def perform_validation():
             missing_logos.append(src)
 
     # Navigate to catalog page
-    driver.get("https://deploy-preview-13--ghg-demo.netlify.app/data-catalog")
+    driver.get(f"{dashboard_base_url}/data-catalog")
 
     # Check if catalogs are present
     catalog_list = data["catalogs"]
@@ -85,10 +86,11 @@ def perform_validation():
 
 # Number of retries
 max_retries = 3
+dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
 
 for retry in range(max_retries):
     try:
-        perform_validation()
+        perform_validation(dashboard_base_url)
         break  # If validation is successful, break out of the loop
     except PageValidationException as e:
         if retry < max_retries - 1:
