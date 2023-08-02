@@ -34,9 +34,10 @@ jobs:
         sudo mv $RUNNER_TEMP/chromedriver /usr/local/bin/chromedriver
         rm chromedriver_linux64.zip
 
-    - name: Install Python dependencies
-      run: pip install -r requirements.txt
+    - name: Install selenium
+      run: pip install selenium
 
     - name: Run Selenium script
-      run: python selenium_ui_test.py
-
+    env:
+      PASSWORD: ${{ secrets.UI_PASSWORD }}
+    run: python selenium_ui_test.py $PASSWORD
