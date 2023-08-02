@@ -1,4 +1,5 @@
 import json
+import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -39,7 +40,7 @@ def perform_validation():
 
     # Enter password and hit enter to sign in
     password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
-    password_input.send_keys("partnership")
+    password_input.send_keys(os.environ.get('PASSWORD'))
     password_input.send_keys(Keys.ENTER)
 
     # Wait for page to load
