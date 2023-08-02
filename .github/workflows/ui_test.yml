@@ -38,10 +38,9 @@ jobs:
       run: pip install selenium
 
     - name: Set Password Secret
-    env:
-      PASSWORD: ${{ secrets.UI_PASSWORD }}
-    run: echo "PASSWORD=$PASSWORD" >> $GITHUB_ENV
+      env:
+        PASSWORD: ${{ secrets.UI_PASSWORD }}
+      run: echo "PASSWORD=$PASSWORD" >> $GITHUB_ENV
 
-    - name: Run UI Validation
-      run: |
-        python your_validation_script.py $PASSWORD
+    - name: Run UI validation
+      run: python selenium_ui_test.py $PASSWORD
