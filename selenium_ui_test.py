@@ -40,9 +40,10 @@ def perform_validation(dashboard_base_url):
     driver.get(dashboard_base_url) #"https://deploy-preview-13--ghg-demo.netlify.app/")
 
     # Enter password and hit enter to sign in
-    password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
-    password_input.send_keys(os.environ.get('PASSWORD'))
-    password_input.send_keys(Keys.ENTER)
+    if password:
+        password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
+        password_input.send_keys(password)
+        password_input.send_keys(Keys.ENTER)
 
     # Wait for page to load
     driver.implicitly_wait(5)
@@ -87,6 +88,7 @@ def perform_validation(dashboard_base_url):
 # Number of retries
 max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
+password =   password = os.environ.get('PASSWORD')
 
 for retry in range(max_retries):
     try:
