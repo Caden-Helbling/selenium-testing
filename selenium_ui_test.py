@@ -67,9 +67,9 @@ def perform_validation(dashboard_base_url):
         else:
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
-                image_element_x = image_element.location['x']
+                # image_element_x = image_element.location['x']
                 print(image_element_y)
-                print(image_element_x)
+                # print(image_element_x)
 
 
     # Navigate to catalog page
