@@ -88,7 +88,7 @@ def perform_validation(dashboard_base_url):
 # Number of retries
 max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
-password = 
+password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
     try:
