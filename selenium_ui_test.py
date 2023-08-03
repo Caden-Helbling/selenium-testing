@@ -5,7 +5,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
 options.add_argument('--headless')
@@ -59,15 +58,17 @@ def perform_validation(dashboard_base_url):
     missing_logos = []
 
     # Check if each logo is present on the page
+    # Check if each logo is present on the page
     for src in logo_src_list:
         src = src.split("/")[-1].split(".")[0]
-        image_element = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
-        image_element_x, image_element_y = image_element.location['x'], image_element.location['y']
-        print(image_element_x)
-        print(image_element_y)
-
-        if not image_element:
+        image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
+        if not image_elements:
             missing_logos.append(src)
+        else:
+            for image_element in image_elements:
+                image_element_y = image_element.location['y']
+                print(image_element_y)
+
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
