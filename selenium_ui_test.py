@@ -70,9 +70,17 @@ def perform_validation(dashboard_base_url):
                 print(image_element_y)
                 y_coordinates.append(image_element_y)
 
-    std_deviation = statistics.stdev(y_coordinates)
-    print(y_coordinates)
-    print(std_deviation)
+    # Calculate the mean of y-coordinates
+    mean_y = statistics.mean(y_coordinates)
+
+    # Calculate the absolute deviation of each y value from the mean
+    absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
+
+    # Calculate the mean absolute deviation (MAD)
+    mad = statistics.mean(absolute_deviations)
+
+    print("Y-coordinates:", y_coordinates)
+    print("Mean Absolute Deviation (MAD):", mad)
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
