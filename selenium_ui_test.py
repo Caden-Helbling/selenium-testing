@@ -59,7 +59,8 @@ def perform_validation(dashboard_base_url):
 
     # Check if each logo is present on the page
     for src in logo_src_list:
-        image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
+        src = src.split("/")[-1].split(".")[0]
+        image_element = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_element:
             missing_logos.append(src)
 
