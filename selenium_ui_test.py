@@ -71,8 +71,9 @@ def perform_validation(dashboard_base_url):
                 y_coordinates.append(image_element_y)
 
     std_deviation = statistics.stdev(y_coordinates)
+    print(y_coordinates)
     print(std_deviation)
-    
+
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
 
