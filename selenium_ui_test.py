@@ -53,7 +53,7 @@ def perform_validation(dashboard_base_url):
     with open('ui_data.json') as json_file:
         data = json.load(json_file)
 
-    # Check logos
+    # Check for logos and their positions
     logo_src_list = data["logos"]
 
     missing_logos = []
