@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
 options.add_argument('--headless')
@@ -61,6 +62,9 @@ def perform_validation(dashboard_base_url):
     for src in logo_src_list:
         src = src.split("/")[-1].split(".")[0]
         image_element = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
+        image_element_x, image_element_y = image_element.location['x'], image_element.location['y']
+        print(image_element_x)
+        print(image_element_y)
 
         if not image_element:
             missing_logos.append(src)
