@@ -1,9 +1,9 @@
 {
     "logos": [
-      "epa.17d0873a.svg",
-      "nasa.5cf6faef.png",
-      "nist.13219e63.png",
-      "noaa.df5d210a.png"
+      "https://deploy-preview-13--ghg-demo.netlify.app/epa.17d0873a.svg",
+      "https://deploy-preview-13--ghg-demo.netlify.app/nasa.5cf6faef.png",
+      "https://deploy-preview-13--ghg-demo.netlify.app/nist.13219e63.png",
+      "https://deploy-preview-13--ghg-demo.netlify.app/noaa.df5d210a.png"
     ],
     "catalogs": [
       "CH4 Wetland Emissions",
