@@ -59,9 +59,8 @@ def perform_validation(dashboard_base_url):
 
     # Check if each logo is present on the page
     for src in logo_src_list:
-        try:
-            image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
-        except NoSuchElementException:
+        image_element = driver.find_elements(By.XPATH, f"//img[@src='{src}']")
+        if not image_element:
             missing_logos.append(src)
 
     # Navigate to catalog page
@@ -89,7 +88,7 @@ def perform_validation(dashboard_base_url):
 # Number of retries
 max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
-password =   password = os.environ.get('PASSWORD')
+password = 
 
 for retry in range(max_retries):
     try:
