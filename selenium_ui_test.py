@@ -1,5 +1,6 @@
 import json
 import os
+import statistics
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -56,9 +57,8 @@ def perform_validation(dashboard_base_url):
     logo_src_list = data["logos"]
 
     missing_logos = []
+    y_coordinates = []
 
-    # Check if each logo is present on the page
-    # Check if each logo is present on the page
     for src in logo_src_list:
         src = src.split("/")[-1].split(".")[0]
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
@@ -67,11 +67,12 @@ def perform_validation(dashboard_base_url):
         else:
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
-                # image_element_x = image_element.location['x']
                 print(image_element_y)
-                # print(image_element_x)
+                y_coordinates.append(image_element_y)
 
-
+    std_deviation = statistics.stdev(y_coordinates)
+    print(std_deviation)
+    
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
 
