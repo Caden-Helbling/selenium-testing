@@ -12,8 +12,7 @@ options.add_argument('--headless')
 
 # Class to handle errors
 class PageValidationException(Exception):
-    def __init__(self, message, missing_logos=None, missing_catalogs=None):
-        super().__init__(message)
+    def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None):
         self.missing_logos = missing_logos
         self.missing_catalogs = missing_catalogs
 
@@ -29,6 +28,9 @@ class PageValidationException(Exception):
             message += "Missing catalogs:\n"
             for catalog in self.missing_catalogs:
                 message += f"  {catalog}\n"
+        
+        if self.mad_message:
+            message += "Logos are out of alignment:\n"
 
         return message
 
@@ -84,7 +86,7 @@ def perform_validation(dashboard_base_url):
     print("Mean Absolute Deviation (MAD):", mad)
 
     if mad > -1:
-        mad_message = "Logos are out of alignment"
+        mad_message = True
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
@@ -103,7 +105,7 @@ def perform_validation(dashboard_base_url):
 
     # Raise exception if any validation fails
     if missing_logos or missing_catalogs or mad_message:
-        raise PageValidationException(message = mad_message, missing_logos=missing_logos, missing_catalogs=missing_catalogs)
+        raise PageValidationException(mad_message = mad_message, missing_logos=missing_logos, missing_catalogs=missing_catalogs)
     else:
         print("Validation successful. All elements are present.")
 
