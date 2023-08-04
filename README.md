@@ -16,7 +16,9 @@ Add the following to the github environment:
 # Output
 
 UI testing passes with a "Validation successful. All elements are present." message if all elements provided in the ui_data.json file are located.
+
 If the test fails a PageValidationError will be triggered with the following returned values:
-Missing logos: A list of any logos that were unable to be located.
-Missing catalogs: A list of any catalogs from the .json file that were not found.
-Logos out of alignment: Indicates that the logos present on the page are out of horizontal alignment.
+
+- Missing logos: A list of any logos that were unable to be located.
+- Missing catalogs: A list of any catalogs from the .json file that were not found.
+- Logos out of alignment: Indicates that the logos present on the page are out of horizontal alignment.
