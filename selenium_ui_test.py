@@ -83,7 +83,7 @@ def perform_validation(dashboard_base_url):
     # Calculate the mean absolute deviation (MAD)
     mad = statistics.mean(absolute_deviations)
 
-    mad_message = mad > -1
+    mad_message = mad > 12
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
