@@ -83,9 +83,6 @@ def perform_validation(dashboard_base_url):
     # Calculate the mean absolute deviation (MAD)
     mad = statistics.mean(absolute_deviations)
 
-    print("Y-coordinates:", y_coordinates)
-    print("Mean Absolute Deviation (MAD):", mad)
-
     mad_message = mad > -1
 
     # Navigate to catalog page
