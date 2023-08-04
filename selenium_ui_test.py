@@ -82,7 +82,7 @@ def perform_validation(dashboard_base_url):
     print("Y-coordinates:", y_coordinates)
     print("Mean Absolute Deviation (MAD):", mad)
 
-    if mad > 12:
+    if mad > 0:
         raise PageValidationException("Logos are out of alignment")
 
     # Navigate to catalog page
