@@ -42,6 +42,7 @@ def perform_validation(dashboard_base_url):
 
     # Enter password and hit enter to sign in
     if password:
+        print("UI_PASSWORD environment variable present. Entering password.")
         password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
@@ -67,7 +68,6 @@ def perform_validation(dashboard_base_url):
         else:
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
-                print(image_element_y)
                 y_coordinates.append(image_element_y)
 
     # Calculate the mean of y-coordinates
@@ -81,6 +81,9 @@ def perform_validation(dashboard_base_url):
 
     print("Y-coordinates:", y_coordinates)
     print("Mean Absolute Deviation (MAD):", mad)
+
+    if mad > 12:
+        raise PageValidationException("Logos are out of alignment")
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
