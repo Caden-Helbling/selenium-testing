@@ -85,7 +85,8 @@ def perform_validation(dashboard_base_url):
     print("Y-coordinates:", y_coordinates)
     print("Mean Absolute Deviation (MAD):", mad)
 
-    mad_message = mad > -1
+    if mad > -1:
+        mad_message = "Out of alignment"
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
@@ -104,7 +105,7 @@ def perform_validation(dashboard_base_url):
 
     # Raise exception if any validation fails
     if missing_logos or missing_catalogs or mad_message:
-        raise PageValidationException(mad_message = mad_message, missing_logos=missing_logos, missing_catalogs=missing_catalogs)
+        raise PageValidationException(mad_message=mad_message, missing_logos=missing_logos, missing_catalogs=missing_catalogs)
     else:
         print("Validation successful. All elements are present.")
 
