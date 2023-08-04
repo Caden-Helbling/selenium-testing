@@ -31,7 +31,7 @@ class PageValidationException(Exception):
                 message += f"  {catalog}\n"
         
         if self.mad_message:
-            message += "Logos are out of alignment:\n"
+            message += "Logos are out of alignment.\n"
 
         return message
 
