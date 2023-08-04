@@ -13,6 +13,7 @@ options.add_argument('--headless')
 # Class to handle errors
 class PageValidationException(Exception):
     def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None):
+        self.mad_message = mad_message
         self.missing_logos = missing_logos
         self.missing_catalogs = missing_catalogs
 
