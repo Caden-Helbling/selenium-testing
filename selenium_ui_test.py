@@ -43,6 +43,7 @@ def perform_validation(dashboard_base_url):
     dashboard_base_url = dashboard_base_url.rstrip('/')
     # Load webpage
     driver.get(dashboard_base_url) #"https://deploy-preview-13--ghg-demo.netlify.app/")
+    driver.implicitly_wait(5) # Wait for page to load
 
     # Enter password and hit enter to sign in
     if password:
@@ -51,8 +52,8 @@ def perform_validation(dashboard_base_url):
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
 
-    # Wait for page to load
-    driver.implicitly_wait(5)
+    
+    driver.implicitly_wait(5) # Wait for page to load
 
     # Load data from .json
     with open('ui_data.json') as json_file:
@@ -78,15 +79,11 @@ def perform_validation(dashboard_base_url):
     mean_y = statistics.mean(y_coordinates)
     absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
     mad = statistics.mean(absolute_deviations)
-
-    # Set mad_message if logos deviate too much out of alignment
-    mad_message = mad > 12
+    mad_message = mad > 12 # Set mad_message if logos deviate too much out of alignment
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
-
-    # Wait for page to load
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(5) # Wait for page to load
 
     # Check if catalogs are present
     catalog_list = data["catalogs"]
@@ -98,6 +95,12 @@ def perform_validation(dashboard_base_url):
         except NoSuchElementException:
             missing_catalogs.append(catalog)
 
+    # Navigate to analysis page
+    # Click upload file button
+    # Pass shapefile
+    # Click date fields and set date range
+    # Check for existence of dataset
+
     driver.quit()
 
     # Raise exception if any validation fails
@@ -107,7 +110,7 @@ def perform_validation(dashboard_base_url):
         print("Validation successful. All elements are present.")
 
 
-# Number of retries
+# Retry loop
 max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
 password = os.getenv("PASSWORD")
