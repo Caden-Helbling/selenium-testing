@@ -85,8 +85,7 @@ def perform_validation(dashboard_base_url):
     print("Y-coordinates:", y_coordinates)
     print("Mean Absolute Deviation (MAD):", mad)
 
-    if mad > -1:
-        mad_message = True
+    mad_message = mad > -1
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
