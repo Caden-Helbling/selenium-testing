@@ -87,7 +87,7 @@ def perform_validation(dashboard_base_url):
 
     # Wait for page to load
     driver.implicitly_wait(5)
-    
+
     # Check if catalogs are present
     catalog_list = data["catalogs"]
     missing_catalogs = []
@@ -108,7 +108,7 @@ def perform_validation(dashboard_base_url):
 
 
 # Number of retries
-max_retries = 1
+max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
 password = os.getenv("PASSWORD")
 
