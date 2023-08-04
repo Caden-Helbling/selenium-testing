@@ -74,20 +74,20 @@ def perform_validation(dashboard_base_url):
                 image_element_y = image_element.location['y']
                 y_coordinates.append(image_element_y)
 
-    # Calculate the mean of y-coordinates
+    # Calculate the mean absolute deviation (MAD) of logo y positions
     mean_y = statistics.mean(y_coordinates)
-
-    # Calculate the absolute deviation of each y value from the mean
     absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
-
-    # Calculate the mean absolute deviation (MAD)
     mad = statistics.mean(absolute_deviations)
 
+    # Set mad_message if logos deviate too much out of alignment
     mad_message = mad > 12
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
 
+    # Wait for page to load
+    driver.implicitly_wait(5)
+    
     # Check if catalogs are present
     catalog_list = data["catalogs"]
     missing_catalogs = []
