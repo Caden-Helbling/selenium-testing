@@ -107,7 +107,7 @@ def perform_validation(dashboard_base_url):
     map_canvas_size = map_canvas.size
     map_canvas_location = map_canvas.location
     print(f'canvas size is {map_canvas_size}')
-    print(f'canvas is located at {map_canvas_size}')
+    print(f'canvas is located at {map_canvas_location}')
 
     corner_coordinates = [
     (map_canvas_location['x'] + 40, map_canvas_location['y'] + 40),
