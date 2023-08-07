@@ -105,8 +105,8 @@ def perform_validation(dashboard_base_url):
     element = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
     element_size = element.size
     element_location = element.location
-    print('canvas size is ' + element_size)
-    print('cavas is located at ' + element_location)
+    print(f'canvas size is {element_size}')
+    print(f'canvas is located at {element_size}')
 
     corner_coordinates = [
     (element_location['x'] + 20, element_location['y'] + 20),
