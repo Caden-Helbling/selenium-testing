@@ -138,15 +138,8 @@ def perform_validation(dashboard_base_url):
     try:
         # Find the label element based on its attributes
         check_boxes = driver.find_elements(By.CSS_SELECTOR, '[class*="checkable__FormCheckableText"]')
-        for element in check_boxes:
-            tag_name = element.tag_name
-            text = element.text
-            attributes = element.get_attribute("outerHTML")
-            
-            print(f"Tag Name: {tag_name}")
-            print(f"Text: {text}")
-            print(f"Attributes: {attributes}")
-            print("-----------")
+        print(check_boxes)
+
         
         print("Check box element found on the webpage.")
     
