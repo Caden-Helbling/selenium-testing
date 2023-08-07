@@ -135,6 +135,9 @@ def perform_validation(dashboard_base_url):
     action_menu_last10_year = driver.find_element(By.XPATH, '/html/body/div[10]/div/ul/li[4]/button')
     action_menu_last10_year.click()
 
+    heading = driver.find_element(By.CLASS_NAME, 'Heading')
+    print(heading)
+
     try:
         # Find the label element based on its attributes
         heading = driver.find_element(By.CLASS_NAME, 'Heading')
