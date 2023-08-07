@@ -135,6 +135,18 @@ def perform_validation(dashboard_base_url):
     action_menu_last10_year = driver.find_element(By.XPATH, '/html/body/div[10]/div/ul/li[4]/button')
     action_menu_last10_year.click()
 
+    # Create a WebDriver instance (e.g., Chrome)
+    driver = webdriver.Chrome()
+
+    # Navigate to a webpage
+    driver.get('https://www.example.com')
+
+    # Set the directory path within the GitHub Actions runner workspace
+    screenshot_path = '/github/workspace/screenshots/screenshot.png'
+
+    # Take a screenshot and save it to the specified file path
+    driver.save_screenshot(screenshot_path)
+
     try:
         # Find the label element based on its attributes
         check_boxes = driver.find_element(By.XPATH, '//*[contains(@class, "input_FormInput")]')
