@@ -102,18 +102,18 @@ def perform_validation(dashboard_base_url):
     # Navigate to analysis page
     driver.get(f"{dashboard_base_url}/analysis")
 
-    element = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-    element_size = element.size
-    element_location = element.location
-    print(f'canvas size is {element_size}')
-    print(f'canvas is located at {element_size}')
+    map_canvas = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
+    driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
+    map_canvas_size = map_canvas.size
+    map_canvas_location = map_canvas.location
+    print(f'canvas size is {map_canvas_size}')
+    print(f'canvas is located at {map_canvas_size}')
 
     corner_coordinates = [
-    (element_location['x'] + 20, element_location['y'] + 20),
-    (element_location['x'] + 80, element_location['y'] + 20),
-    (element_location['x'] + 80, element_location['y'] + 80),
-    (element_location['x'] + 20, element_location['y'] + 80)
+    (map_canvas_location['x'] + map_canvas_size['width'] * 0.2, map_canvas_location['y'] + map_canvas_size['height'] * 0.2),
+    (map_canvas_location['x'] + map_canvas_size['width'] * 0.8, map_canvas_location['y'] + map_canvas_size['height'] * 0.2),
+    (map_canvas_location['x'] + map_canvas_size['width'] * 0.8, map_canvas_location['y'] + map_canvas_size['height'] * 0.8),
+    (map_canvas_location['x'] + map_canvas_size['width'] * 0.2, map_canvas_location['y'] + map_canvas_size['height'] * 0.8)
     ]
     print(f'coordinates to click are {corner_coordinates}')
 
@@ -126,6 +126,23 @@ def perform_validation(dashboard_base_url):
         actions.click_and_hold()
         actions.perform()
         actions.release()
+
+    map_canvas.send_keys(Keys.ENTER)
+
+    action_menu = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[3]/div/div[1]/div[2]/div/button/svg')
+    action_menu.click()
+
+    action_menu_last10_year = driver.find_element(By.XPATH, '/html/body/div[10]/div/ul/li[4]/button')
+    action_menu_last10_year.click()
+
+    try:
+        # Find the label element based on its attributes
+        check_boxes = driver.find_elements(By.CSS_SELECTOR, '[class*="checkable__FormCheckable"]')
+        
+        print("Check box element found on the webpage.")
+    
+    except NoSuchElementException:
+        print("Label element not found on the webpage.")
 
     # Click on map
     # Click upload file button
