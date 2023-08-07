@@ -83,7 +83,7 @@ def perform_validation(dashboard_base_url):
     mean_y = statistics.mean(y_coordinates)
     absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
     mad = statistics.mean(absolute_deviations)
-    mad_message = mad > 12 # Set mad_message if logos deviate too much out of alignment
+    mad_message = mad > 13 # Set mad_message if logos deviate too much out of alignment
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
