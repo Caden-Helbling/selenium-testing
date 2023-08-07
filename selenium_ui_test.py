@@ -138,8 +138,8 @@ def perform_validation(dashboard_base_url):
         # Find the label element based on its attributes
         form_input = driver.find_element(By.XPATH, '//*[contains(@class, "input__FormInput")]')
         print(form_input)
-        # check_box = driver.find_element(By.XPATH, '//*[contains(@class, "checkable_FormCheckable")]')
-        # print(check_box)
+        check_box = driver.find_element(By.XPATH, '//*[contains(@class, "checkable_FormCheckable")]')
+        print(check_box)
 
         
         print("Check box element found on the webpage.")
