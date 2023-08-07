@@ -135,9 +135,6 @@ def perform_validation(dashboard_base_url):
     action_menu_last10_year = driver.find_element(By.XPATH, '/html/body/div[10]/div/ul/li[4]/button')
     action_menu_last10_year.click()
 
-    heading = driver.find_element(By.XPATH, 'contains(text(), "Heading")')
-    print(heading)
-
     try:
         # Find the label element based on its attributes
         check_boxes = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckable")]')
