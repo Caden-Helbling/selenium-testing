@@ -78,6 +78,7 @@ def perform_validation(dashboard_base_url):
                 image_element_y = image_element.location['y']
                 y_coordinates.append(image_element_y)
 
+    print(y_coordinates)
     # Calculate the mean absolute deviation (MAD) of logo y positions
     mean_y = statistics.mean(y_coordinates)
     absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
@@ -109,10 +110,10 @@ def perform_validation(dashboard_base_url):
     print(element_location)
 
     corner_coordinates = [
-    (element_location['x'] + element_size['width'] * 0.2, element_location['y'] + element_size['height'] * 0.2),
-    (element_location['x'] + element_size['width'] * 0.8, element_location['y'] + element_size['height'] * 0.2),
-    (element_location['x'] + element_size['width'] * 0.8, element_location['y'] + element_size['height'] * 0.8),
-    (element_location['x'] + element_size['width'] * 0.2, element_location['y'] + element_size['height'] * 0.8)
+    (element_location['x'] + 20, element_location['y'] + 20),
+    (element_location['x'] + 80, element_location['y'] + 20),
+    (element_location['x'] + 80, element_location['y'] + 80),
+    (element_location['x'] + 20, element_location['y'] + 80)
     ]
     print(corner_coordinates)
 
