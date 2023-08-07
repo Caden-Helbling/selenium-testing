@@ -110,10 +110,10 @@ def perform_validation(dashboard_base_url):
     print(f'canvas is located at {map_canvas_size}')
 
     corner_coordinates = [
-    (map_canvas_location['x'] + map_canvas_size['width'] * 0.2, map_canvas_location['y'] + map_canvas_size['height'] * 0.2),
-    (map_canvas_location['x'] + map_canvas_size['width'] * 0.8, map_canvas_location['y'] + map_canvas_size['height'] * 0.2),
-    (map_canvas_location['x'] + map_canvas_size['width'] * 0.8, map_canvas_location['y'] + map_canvas_size['height'] * 0.8),
-    (map_canvas_location['x'] + map_canvas_size['width'] * 0.2, map_canvas_location['y'] + map_canvas_size['height'] * 0.8)
+    (map_canvas_location['x'] + 20, map_canvas_location['y'] + 20),
+    (map_canvas_location['x'] + 80, map_canvas_location['y'] + 20),
+    (map_canvas_location['x'] + 80, map_canvas_location['y'] + 80),
+    (map_canvas_location['x'] + 20, map_canvas_location['y'] + 80)
     ]
     print(f'coordinates to click are {corner_coordinates}')
 
