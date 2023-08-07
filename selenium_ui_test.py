@@ -105,9 +105,8 @@ def perform_validation(dashboard_base_url):
     element = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
     element_size = element.size
     element_location = element.location
-    print(element)
-    print(element_size)
-    print(element_location)
+    print('canvas size is ' + element_size)
+    print('cavas is located at ' + element_location)
 
     corner_coordinates = [
     (element_location['x'] + 20, element_location['y'] + 20),
@@ -115,7 +114,7 @@ def perform_validation(dashboard_base_url):
     (element_location['x'] + 80, element_location['y'] + 80),
     (element_location['x'] + 20, element_location['y'] + 80)
     ]
-    print(corner_coordinates)
+    print('coordinates to click are' + corner_coordinates)
 
     # Perform the clicks
     actions = ActionChains(driver)
