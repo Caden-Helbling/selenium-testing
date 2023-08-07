@@ -11,7 +11,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
 options.add_argument('--headless')
-options.options.add_argument('--window-size=1920x1080')  # Set window size
+options.add_argument('--window-size=1920x1080')  # Set window size
 
 # Class to handle errors
 class PageValidationException(Exception):
