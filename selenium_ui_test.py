@@ -96,6 +96,29 @@ def perform_validation(dashboard_base_url):
             missing_catalogs.append(catalog)
 
     # Navigate to analysis page
+    driver.get(f"{dashboard_base_url}/analysis")
+
+    element = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
+    element_size = element.size
+    element_location = element.location
+    print(element)
+    print(element_size)
+    print(element_location)
+
+    click_coordinates = [
+    (element_location['x'], element_location['y']),
+    (element_location['x'] + element_size['width'], element_location['y']),
+    (element_location['x'] + element_size['width'], element_location['y'] + element_size['height']),
+    (element_location['x'], element_location['y'] + element_size['height'])
+]
+
+    # Perform the clicks
+    for x, y in click_coordinates:
+        driver.execute_script(f"window.scrollTo({x}, {y})")
+        driver.implicitly_wait(1)  # Add a short delay between clicks
+        element.click()
+
+    # Click on map
     # Click upload file button
     # Pass shapefile
     # Click date fields and set date range
