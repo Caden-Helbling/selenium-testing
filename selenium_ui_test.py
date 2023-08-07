@@ -115,7 +115,7 @@ def perform_validation(dashboard_base_url):
     (map_canvas_location['x'] + 160, map_canvas_location['y'] + 160),
     (map_canvas_location['x'] + 40, map_canvas_location['y'] + 160)
     ]
-    print(f'coordinates to click are {corner_coordinates}')
+    print(f'coordinates to click are {corner_coordinates} {map_canvas_location}')
 
     # Perform the clicks
     actions = ActionChains(driver)
