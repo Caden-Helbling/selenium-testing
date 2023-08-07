@@ -146,7 +146,7 @@ def perform_validation(dashboard_base_url):
             print(f"Tag Name: {tag_name}")
             print(f"Text: {text}")
             print(f"Attributes: {attributes}")
-            print("----------")
+            print("-----------")
         
         print("Check box element found on the webpage.")
     
