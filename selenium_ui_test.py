@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 options = Options()
 options.add_argument('--headless')
@@ -105,19 +107,23 @@ def perform_validation(dashboard_base_url):
     print(element_size)
     print(element_location)
 
-    click_coordinates = [
-    (element_location['x'], element_location['y']),
-    (element_location['x'] + element_size['width'], element_location['y']),
-    (element_location['x'] + element_size['width'], element_location['y'] + element_size['height']),
-    (element_location['x'], element_location['y'] + element_size['height'])
+    corner_coordinates = [
+    (element_location['x'] + element_size['width'] * 0.2, element_location['y'] + element_size['height'] * 0.2),
+    (element_location['x'] + element_size['width'] * 0.8, element_location['y'] + element_size['height'] * 0.2),
+    (element_location['x'] + element_size['width'] * 0.8, element_location['y'] + element_size['height'] * 0.8),
+    (element_location['x'] + element_size['width'] * 0.2, element_location['y'] + element_size['height'] * 0.8)
     ]
-    print(click_coordinates)
+    print(corner_coordinates)
 
     # Perform the clicks
-    for x, y in click_coordinates:
-        driver.execute_script(f"window.scrollTo({x}, {y})")
-        driver.implicitly_wait(1)  # Add a short delay between clicks
-        element.click()
+    actions = ActionChains(driver)
+
+    # Simulate drawing the rectangle by performing mousedown, mousemove, and mouseup actions
+    for x, y in corner_coordinates:
+        actions.move_to_element_with_offset(canvas, x, y)
+        actions.click_and_hold()
+        actions.perform()
+        actions.release()
 
     # Click on map
     # Click upload file button
