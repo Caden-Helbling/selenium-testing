@@ -129,7 +129,7 @@ def perform_validation(dashboard_base_url):
 
     map_canvas.send_keys(Keys.ENTER)
 
-    action_menu = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[3]/div/div[1]/div[2]/div/button/svg')
+    action_menu = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[3]/div/div[1]/div[2]/div/button')
     action_menu.click()
 
     action_menu_last10_year = driver.find_element(By.XPATH, '/html/body/div[10]/div/ul/li[4]/button')
