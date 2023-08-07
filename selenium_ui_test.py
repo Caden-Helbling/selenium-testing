@@ -110,7 +110,8 @@ def perform_validation(dashboard_base_url):
     (element_location['x'] + element_size['width'], element_location['y']),
     (element_location['x'] + element_size['width'], element_location['y'] + element_size['height']),
     (element_location['x'], element_location['y'] + element_size['height'])
-]
+    ]
+    print(click_coordinates)
 
     # Perform the clicks
     for x, y in click_coordinates:
