@@ -123,8 +123,7 @@ def perform_validation(dashboard_base_url):
     # Simulate drawing the rectangle by performing mousedown, mousemove, and mouseup actions
     for x, y in corner_coordinates:
         actions.move_to_element_with_offset(map_canvas, x, y)
-        actions.click()
-        actions.perform()
+        actions.click().perform()
 
     map_canvas.send_keys(Keys.ENTER)
 
