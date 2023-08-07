@@ -147,7 +147,7 @@ def perform_validation(dashboard_base_url):
     except NoSuchElementException:
         print("Label element not found on the webpage.")
 
-    browser.save_screenshot("screenshot.png")
+    webdriver.save_screenshot("screenshot.png")
 
     # Click on map
     # Click upload file button
