@@ -96,6 +96,7 @@ def perform_validation(dashboard_base_url):
     for catalog in catalog_list:
         try:
             title_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
+            print(title_element)
         except NoSuchElementException:
             missing_catalogs.append(catalog)
 
@@ -147,7 +148,7 @@ def perform_validation(dashboard_base_url):
         print("Label element not found on the webpage.")
 
     browser.save_screenshot("screenshot.png")
-    
+
     # Click on map
     # Click upload file button
     # Pass shapefile
