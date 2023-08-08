@@ -120,7 +120,7 @@ def perform_validation(dashboard_base_url):
     # Perform the clicks
     actions = ActionChains(driver)
 
-    # Simulate drawing the rectangle by performing mousedown, mousemove, and mouseup actions
+    # Simulate drawing the rectangle on map
     for x, y in corner_coordinates:
         actions.move_to_element_with_offset(map_canvas, x, y)
         actions.click().perform()
