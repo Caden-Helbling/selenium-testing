@@ -1,6 +1,7 @@
 import json
 import os
 import statistics
+import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -8,6 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
+chromedriver_autoinstaller.install()
 
 options = Options()
 options.add_argument('--headless')

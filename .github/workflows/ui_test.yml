@@ -22,25 +22,8 @@ jobs:
       with:
         python-version: 3.x
 
-    - name: Install ChromeDriver
-      run: |
-        # Fetch the JSON data
-        JSON_RESPONSE=$(curl -sS "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json")
-        
-        # Parse the JSON response using jq to get the latest ChromeDriver version and download URL
-        CHROME_DRIVER_VERSION=$(echo "$JSON_RESPONSE" | jq -r '.lastKnownGood.chromedriver.version')
-        CHROME_DRIVER_URL=$(echo "$JSON_RESPONSE" | jq -r '.lastKnownGood.chromedriver.downloadUrl')
-        
-        # Display the fetched information
-        echo "Latest ChromeDriver Version: $CHROME_DRIVER_VERSION"
-        echo "ChromeDriver Download URL: $CHROME_DRIVER_URL"
-        
-        # Download and install ChromeDriver
-        curl -sS -o chromedriver.zip "$CHROME_DRIVER_URL"
-        unzip chromedriver.zip -d $RUNNER_TEMP
-        chmod +x $RUNNER_TEMP/chromedriver
-        sudo mv $RUNNER_TEMP/chromedriver /usr/local/bin/
-        rm chromedriver.zip
+    - name: Install ChromeDriver installer
+      run: pip install chromedriver-autoinstaller
       
 
     - name: Install selenium
