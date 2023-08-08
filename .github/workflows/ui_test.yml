@@ -24,15 +24,24 @@ jobs:
 
     - name: Install ChromeDriver
       run: |
-        CHROME_VERSION=$(google-chrome --product-version | cut -d . -f 1)
-        echo $CHROME_VERSION
-        CHROME_DRIVER_VERSION=$(curl -sS "https://chromiumdash.appspot.com/fetch_chromedriver_data" | jq -r '.versions[] | select(.platform == "linux64") | .version')
+        # Fetch the JSON data
+        JSON_RESPONSE=$(curl -sS "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json")
+        
+        # Parse the JSON response using jq to get the latest ChromeDriver version and download URL
+        CHROME_DRIVER_VERSION=$(echo "$JSON_RESPONSE" | jq -r '.lastKnownGood.chromedriver.version')
+        CHROME_DRIVER_URL=$(echo "$JSON_RESPONSE" | jq -r '.lastKnownGood.chromedriver.downloadUrl')
+        
+        # Display the fetched information
         echo "Latest ChromeDriver Version: $CHROME_DRIVER_VERSION"
-        curl -sS -o chromedriver.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROME_DRIVER_VERSION}/linux64/chromedriver_linux64.zip"
+        echo "ChromeDriver Download URL: $CHROME_DRIVER_URL"
+        
+        # Download and install ChromeDriver
+        curl -sS -o chromedriver.zip "$CHROME_DRIVER_URL"
         unzip chromedriver.zip -d $RUNNER_TEMP
         chmod +x $RUNNER_TEMP/chromedriver
         sudo mv $RUNNER_TEMP/chromedriver /usr/local/bin/
         rm chromedriver.zip
+      
 
     - name: Install selenium
       run: pip install selenium
