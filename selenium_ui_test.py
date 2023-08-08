@@ -9,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
-chromedriver_autoinstaller.install()
+# chromedriver_autoinstaller.install()
 
 options = Options()
 options.add_argument('--headless')
