@@ -24,16 +24,15 @@ jobs:
 
     - name: Install ChromeDriver
       run: |
-        CHROME_VERSION=$(google-chrome --product-version)
+        CHROME_VERSION=$(google-chrome --product-version | cut -d . -f 1)
         echo $CHROME_VERSION
-        CHROME_VERSION_MINUS_1=$((CHROME_VERSION - 1))
-        CHROME_DRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION_MINUS_1})
-        echo $CHROME_DRIVER_VERSION
-        curl -sS -o chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip -d $RUNNER_TEMP
+        CHROME_DRIVER_VERSION=$(curl -sS "https://chromiumdash.appspot.com/fetch_chromedriver_data" | jq -r '.versions[] | select(.platform == "linux64") | .version')
+        echo "Latest ChromeDriver Version: $CHROME_DRIVER_VERSION"
+        curl -sS -o chromedriver.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROME_DRIVER_VERSION}/linux64/chromedriver_linux64.zip"
+        unzip chromedriver.zip -d $RUNNER_TEMP
         chmod +x $RUNNER_TEMP/chromedriver
-        sudo mv $RUNNER_TEMP/chromedriver /usr/local/bin/chromedriver
-        rm chromedriver_linux64.zip
+        sudo mv $RUNNER_TEMP/chromedriver /usr/local/bin/
+        rm chromedriver.zip
 
     - name: Install selenium
       run: pip install selenium
