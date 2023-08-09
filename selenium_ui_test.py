@@ -12,7 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 # chromedriver_autoinstaller.install()
 
 options = Options()
-options.add_argument('--headless') # Run browser in headless mode inside the github runner
+# options.add_argument('--headless') # Run browser in headless mode inside the github runner
 options.add_argument('--window-size=1920x1080')  # Set window size
 
 class PageValidationException(Exception):
