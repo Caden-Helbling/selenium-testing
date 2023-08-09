@@ -100,6 +100,34 @@ def perform_validation(dashboard_base_url):
     else:
         print("Validation successful. All elements are present.")
 
+    map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
+    # driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
+
+    corner_coordinates = [
+        (-20, 20),
+        (60, 20),
+        (60, 60),
+        (-20, 60)
+    ]
+
+    actions = ActionChains(driver)
+    for x, y in corner_coordinates:
+        actions.move_to_element_with_offset(map_canvas, x, y).click().perform()
+
+    map_canvas.send_keys(Keys.ENTER)
+
+    action_button = driver.find_element(By.XPATH, '//span[contains(text(), "Actions")]/following::button[contains(@class, "StyledButton")]')
+    driver.execute_script("arguments[0].click();", action_button)
+
+
+    driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
+
+    try:
+        check_box = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
+        print("Check box element found on the webpage.")
+
+    except NoSuchElementException:
+        print("Label element not found on the webpage.")
 
 # Retry loop
 max_retries = 3

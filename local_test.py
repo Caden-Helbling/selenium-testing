@@ -1,5 +1,6 @@
 import json
 import statistics
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -9,6 +10,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 # PATH = "/Users/chelblin/Downloads/chromedriver-mac-arm64/chromedriver"
 options = Options()
+# options.add_argument('--headless')
 options.add_argument('--window-size=1920x1080')  # Set window size
 options.add_experimental_option("detach", True)
 
@@ -16,51 +18,40 @@ driver = webdriver.Chrome(options=options)
 
 # Navigate to analysis page
 driver.get("https://deploy-preview-13--ghg-demo.netlify.app/analysis")
+driver.implicitly_wait(5) # Waits for the page to load
 
 print("UI_PASSWORD environment variable present. Entering password.")
-password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
+password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
 password_input.send_keys("partnership")
 password_input.send_keys(Keys.ENTER)
 
-map_canvas = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
-driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
-map_canvas_size = map_canvas.size
-map_canvas_location = map_canvas.location
-print(f'canvas size is {map_canvas_size}')
-print(f'canvas is located at {map_canvas_location}')
+driver.implicitly_wait(5) # Waits for the page to load
+# with open("/Users/chelblin/repos/selenium-testing/page.html", "w", encoding='utf-8') as f:
+#     f.write(driver.page_source)
+map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
+# driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
 
 corner_coordinates = [
-(map_canvas_location['x'] + 40, map_canvas_location['y'] + 40),
-(map_canvas_location['x'] + 160, map_canvas_location['y'] + 40),
-(map_canvas_location['x'] + 160, map_canvas_location['y'] + 160),
-(map_canvas_location['x'] + 40, map_canvas_location['y'] + 160)
+    (-20, 20),
+    (60, 20),
+    (60, 60),
+    (-20, 60)
 ]
-print(f'coordinates to click are {corner_coordinates} {map_canvas_location}')
 
-# Perform the clicks
 actions = ActionChains(driver)
-
-# Simulate drawing the rectangle on map
 for x, y in corner_coordinates:
-    actions.move_to_element_with_offset(map_canvas, x, y)
-    actions.click().perform()
+    actions.move_to_element_with_offset(map_canvas, x, y).click().perform()
 
 map_canvas.send_keys(Keys.ENTER)
 
-action_menu = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[3]/div/div[1]/div[2]/div/button')
-action_menu.click()
+action_button = driver.find_element(By.XPATH, '//span[contains(text(), "Actions")]/following::button[contains(@class, "StyledButton")]')
+driver.execute_script("arguments[0].click();", action_button)
 
-action_menu_last10_year = driver.find_element(By.XPATH, '/html/body/div[10]/div/ul/li[4]/button')
-action_menu_last10_year.click()
+
+driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
 try:
-    # Find the label element based on its attributes
-    form_input = driver.find_element(By.XPATH, '//*[contains(@class, "input__FormInput")]')
-    print(form_input)
-    check_box = driver.find_element(By.XPATH, '//*[contains(@class, "checkable_FormCheckable")]')
-    print(check_box)
-
-    
+    check_box = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
     print("Check box element found on the webpage.")
 
 except NoSuchElementException:
