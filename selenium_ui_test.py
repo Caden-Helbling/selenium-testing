@@ -92,6 +92,10 @@ def perform_validation(dashboard_base_url):
         except NoSuchElementException:
             missing_catalogs.append(catalog)
 
+    # Navigate to catalog page
+    driver.get(f"{dashboard_base_url}/analysis")
+    driver.implicitly_wait(5) # Wait for page to load
+
     map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
     # driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
 
