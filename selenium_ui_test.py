@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 
 # chromedriver_autoinstaller.install()
 
@@ -91,15 +92,6 @@ def perform_validation(dashboard_base_url):
         except NoSuchElementException:
             missing_catalogs.append(catalog)
 
-    # Close the browser
-    driver.quit()
-
-    # Raise exception if any validation fails
-    if missing_logos or missing_catalogs or mad_message:
-        raise PageValidationException(mad_message=mad_message, missing_logos=missing_logos, missing_catalogs=missing_catalogs)
-    else:
-        print("Validation successful. All elements are present.")
-
     map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
     # driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
 
@@ -129,6 +121,17 @@ def perform_validation(dashboard_base_url):
     except NoSuchElementException:
         print("Label element not found on the webpage.")
 
+
+    # Close the browser
+    driver.quit()
+
+    # Raise exception if any validation fails
+    if missing_logos or missing_catalogs or mad_message:
+        raise PageValidationException(mad_message=mad_message, missing_logos=missing_logos, missing_catalogs=missing_catalogs)
+    else:
+        print("Validation successful. All elements are present.")
+
+    
 # Retry loop
 max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
