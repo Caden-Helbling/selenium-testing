@@ -1,21 +1,19 @@
 import json
 import os
 import statistics
-import chromedriver_autoinstaller
+# import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.action_chains import ActionChains
 
 # chromedriver_autoinstaller.install()
 
 options = Options()
-options.add_argument('--headless')
+options.add_argument('--headless') # Run browser in headless mode inside the github runner
 options.add_argument('--window-size=1920x1080')  # Set window size
 
-# Class to handle errors
 class PageValidationException(Exception):
     def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None):
         self.mad_message = mad_message
@@ -40,25 +38,18 @@ class PageValidationException(Exception):
 
         return message
 
-# Function to perform the validation
 def perform_validation(dashboard_base_url):
-    # Set browser driver
-    driver = webdriver.Chrome(options=options)
-    # remove the tailing /
-    dashboard_base_url = dashboard_base_url.rstrip('/')
-    # Load webpage
-    driver.get(dashboard_base_url) #"https://deploy-preview-13--ghg-demo.netlify.app/")
-    driver.implicitly_wait(5) # Wait for page to load
+    driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
+    dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
+    driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
+    driver.implicitly_wait(5) # Waits for the page to load
 
-    # Enter password and hit enter to sign in
+    # Check whether a password has been provided and enter it if required
     if password:
         print("UI_PASSWORD environment variable present. Entering password.")
         password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
-
-    
-    driver.implicitly_wait(5) # Wait for page to load
 
     # Load data from .json
     with open('ui_data.json') as json_file:
@@ -80,7 +71,6 @@ def perform_validation(dashboard_base_url):
                 image_element_y = image_element.location['y']
                 y_coordinates.append(image_element_y)
 
-    print(y_coordinates)
     # Calculate the mean absolute deviation (MAD) of logo y positions
     mean_y = statistics.mean(y_coordinates)
     absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
@@ -101,59 +91,7 @@ def perform_validation(dashboard_base_url):
         except NoSuchElementException:
             missing_catalogs.append(catalog)
 
-    # Navigate to analysis page
-    driver.get(f"{dashboard_base_url}/analysis")
-
-    map_canvas = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
-    driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
-    map_canvas_size = map_canvas.size
-    map_canvas_location = map_canvas.location
-    print(f'canvas size is {map_canvas_size}')
-    print(f'canvas is located at {map_canvas_location}')
-
-    corner_coordinates = [
-    (map_canvas_location['x'] + 40, map_canvas_location['y'] + 40),
-    (map_canvas_location['x'] + 160, map_canvas_location['y'] + 40),
-    (map_canvas_location['x'] + 160, map_canvas_location['y'] + 160),
-    (map_canvas_location['x'] + 40, map_canvas_location['y'] + 160)
-    ]
-    print(f'coordinates to click are {corner_coordinates} {map_canvas_location}')
-
-    # Perform the clicks
-    actions = ActionChains(driver)
-
-    # Simulate drawing the rectangle on map
-    for x, y in corner_coordinates:
-        actions.move_to_element_with_offset(map_canvas, x, y)
-        actions.click().perform()
-
-    map_canvas.send_keys(Keys.ENTER)
-
-    action_menu = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[3]/div/div[1]/div[2]/div/button')
-    action_menu.click()
-
-    action_menu_last10_year = driver.find_element(By.XPATH, '/html/body/div[10]/div/ul/li[4]/button')
-    action_menu_last10_year.click()
-
-    try:
-        # Find the label element based on its attributes
-        form_input = driver.find_element(By.XPATH, '//*[contains(@class, "input__FormInput")]')
-        print(form_input)
-        check_box = driver.find_element(By.XPATH, '//*[contains(@class, "checkable_FormCheckable")]')
-        print(check_box)
-
-        
-        print("Check box element found on the webpage.")
-    
-    except NoSuchElementException:
-        print("Label element not found on the webpage.")
-
-    # Click on map
-    # Click upload file button
-    # Pass shapefile
-    # Click date fields and set date range
-    # Check for existence of dataset
-
+    # Close the browser
     driver.quit()
 
     # Raise exception if any validation fails
@@ -164,7 +102,7 @@ def perform_validation(dashboard_base_url):
 
 
 # Retry loop
-max_retries = 1
+max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
 password = os.getenv("PASSWORD")
 

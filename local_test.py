@@ -22,10 +22,7 @@ password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/i
 password_input.send_keys("partnership")
 password_input.send_keys(Keys.ENTER)
 
-    
-driver.implicitly_wait(1) # Wait for page to load
-
-map_canvas = driver.find_element(By.CLASS_NAME, 'mapboxgl-canvas')
+map_canvas = driver.find_element(By.XPATH, '//*[@id="mapbox-container"]/div/div[2]/canvas')
 driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
 map_canvas_size = map_canvas.size
 map_canvas_location = map_canvas.location
@@ -43,11 +40,12 @@ print(f'coordinates to click are {corner_coordinates} {map_canvas_location}')
 # Perform the clicks
 actions = ActionChains(driver)
 
-# Simulate drawing the rectangle by performing mousedown, mousemove, and mouseup actions
+# Simulate drawing the rectangle on map
 for x, y in corner_coordinates:
-    actions.move_to_element_with_offset(map_canvas, x, y).click().perform()
+    actions.move_to_element_with_offset(map_canvas, x, y)
+    actions.click().perform()
 
-# map_canvas.send_keys(Keys.ENTER)
+map_canvas.send_keys(Keys.ENTER)
 
 action_menu = driver.find_element(By.XPATH, '//*[@id="app-container"]/div/div[2]/main/div[3]/div/div[1]/div[2]/div/button')
 action_menu.click()
@@ -67,3 +65,5 @@ try:
 
 except NoSuchElementException:
     print("Label element not found on the webpage.")
+
+    
