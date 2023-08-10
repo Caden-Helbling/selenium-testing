@@ -1,15 +1,12 @@
 import json
 import os
 import statistics
-# import chromedriver_autoinstaller
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
-
-# chromedriver_autoinstaller.install()
 
 options = Options()
 options.add_argument('--headless') # Run browser in headless mode inside the github runner
@@ -47,7 +44,7 @@ def perform_validation(dashboard_base_url):
     driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
     dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-    driver.implicitly_wait(5) # Waits for the page to load
+    # driver.implicitly_wait(5) # Waits for the page to load
 
     # Check whether a password has been provided and enter it if required
     if password:
@@ -84,7 +81,7 @@ def perform_validation(dashboard_base_url):
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
-    driver.implicitly_wait(5) # Wait for page to load
+    # driver.implicitly_wait(5) # Wait for page to load
 
     # Check if catalogs are present
     catalog_list = data["catalogs"]
@@ -98,7 +95,7 @@ def perform_validation(dashboard_base_url):
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/analysis")
-    driver.implicitly_wait(5) # Wait for page to load
+    # driver.implicitly_wait(5) # Wait for page to load
 
     map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
 
