@@ -10,7 +10,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
-options.add_argument('--headless') # Run browser in headless mode inside the github runner
+# options.add_argument('--headless') # Run browser in headless mode inside the github runner
 options.add_argument('--window-size=1920x1080')  # Set window size
 
 class PageValidationException(Exception):
@@ -136,8 +136,8 @@ def perform_validation(dashboard_base_url):
 
 # Retry loop
 max_retries = 3
-dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
-password = os.getenv("PASSWORD")
+dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app/"
+password = "partnership"
 
 for retry in range(max_retries):
     try:
