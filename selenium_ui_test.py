@@ -43,7 +43,7 @@ class PageValidationException(Exception):
 
         return message
 
-def password():
+def password_input():
     print("UI_PASSWORD environment variable present. Entering ui_password.")
     password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
     password_input.send_keys(ui_password)
@@ -58,10 +58,7 @@ def perform_validation(dashboard_base_url):
 
     # Check whether a ui_password has been provided and enter it if required
     if ui_password:
-        print("UI_PASSWORD environment variable present. Entering ui_password.")
-        password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
-        password_input.send_keys(ui_password)
-        password_input.send_keys(Keys.ENTER)
+        password_input()
 
     # Load data from ui_data.json
     with open('ui_data.json') as json_file:
