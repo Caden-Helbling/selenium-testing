@@ -44,9 +44,9 @@ class PageValidationException(Exception):
         return message
 
 def password():
-    print("UI_PASSWORD environment variable present. Entering password.")
+    print("UI_PASSWORD environment variable present. Entering ui_password.")
     password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
-    password_input.send_keys(password)
+    password_input.send_keys(ui_password)
     password_input.send_keys(Keys.ENTER)
 
 def perform_validation(dashboard_base_url):
@@ -56,11 +56,11 @@ def perform_validation(dashboard_base_url):
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
     # driver.implicitly_wait(3) # Wait for element to load before throwing an error
 
-    # Check whether a password has been provided and enter it if required
-    if password:
-        print("UI_PASSWORD environment variable present. Entering password.")
+    # Check whether a ui_password has been provided and enter it if required
+    if ui_password:
+        print("UI_PASSWORD environment variable present. Entering ui_password.")
         password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
-        password_input.send_keys(password)
+        password_input.send_keys(ui_password)
         password_input.send_keys(Keys.ENTER)
 
     # Load data from ui_data.json
@@ -145,7 +145,7 @@ def perform_validation(dashboard_base_url):
 # Retry loop
 max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
-password = os.getenv("PASSWORD")
+ui_password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
     try:
