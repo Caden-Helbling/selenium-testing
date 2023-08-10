@@ -16,10 +16,11 @@ options.add_argument('--headless') # Run browser in headless mode inside the git
 options.add_argument('--window-size=1920x1080')  # Set window size
 
 class PageValidationException(Exception):
-    def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None):
+    def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None):
         self.mad_message = mad_message
         self.missing_logos = missing_logos
         self.missing_catalogs = missing_catalogs
+        self.missing_datasets = missing_datasets
 
     def __str__(self):
         message = "UI validation failed:\n"
@@ -36,6 +37,9 @@ class PageValidationException(Exception):
         
         if self.mad_message:
             message += "Logos are out of alignment.\n"
+
+        if self.missing_datasets:
+            message += "Datasets are not appearing on analysis page.\n"
 
         return message
 
@@ -97,7 +101,6 @@ def perform_validation(dashboard_base_url):
     driver.implicitly_wait(5) # Wait for page to load
 
     map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
-    # driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
 
     corner_coordinates = [
         (-20, 20),
@@ -119,19 +122,18 @@ def perform_validation(dashboard_base_url):
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
     try:
-        check_box = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
-        print("Check box element found on the webpage.")
+        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
 
     except NoSuchElementException:
-        print("Label element not found on the webpage.")
+        missing_datasets = True
 
 
     # Close the browser
     driver.quit()
 
     # Raise exception if any validation fails
-    if missing_logos or missing_catalogs or mad_message:
-        raise PageValidationException(mad_message=mad_message, missing_logos=missing_logos, missing_catalogs=missing_catalogs)
+    if missing_logos or missing_catalogs or mad_message or missing_datasets:
+        raise PageValidationException(missing_logos=missing_logos, missing_catalogs=missing_catalogs, mad_message=mad_message, missing_datasets=missing_datasets)
     else:
         print("Validation successful. All elements are present.")
 
