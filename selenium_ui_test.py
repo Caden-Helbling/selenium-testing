@@ -143,7 +143,7 @@ driver.quit()
 
 # Retry loop
 max_retries = 3
-dashboard_base_url = os.getenv("DASHBOARD_BASE_URL").rstrip('/') # remove the tailing /
+dashboard_base_url = os.getenv("DASHBOARD_BASE_URL") #.rstrip('/') # remove the tailing /
 ui_password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
