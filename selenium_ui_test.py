@@ -12,6 +12,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 options = Options()
 options.add_argument('--headless') # Run browser in headless mode inside the github runner
 driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
+driver.set_window_size(1920,1080)
+driver.implicitly_wait(3) # Wait for element to load before throwing an error
 
 class PageValidationException(Exception):
     def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None):
@@ -49,10 +51,10 @@ def password():
 
 def perform_validation(dashboard_base_url):
     # driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
-    driver.set_window_size(1920,1080)
+    # driver.set_window_size(1920,1080)
     dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-    driver.implicitly_wait(3) # Wait for element to load before throwing an error
+    # driver.implicitly_wait(3) # Wait for element to load before throwing an error
 
     # Check whether a password has been provided and enter it if required
     if password:
