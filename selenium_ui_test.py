@@ -11,7 +11,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
 options.add_argument('--headless') # Run browser in headless mode inside the github runner
-# options.add_argument('--window-size=1920x1080')  # Set window size
+driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
 
 class PageValidationException(Exception):
     def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None):
@@ -41,8 +41,14 @@ class PageValidationException(Exception):
 
         return message
 
+def password():
+    print("UI_PASSWORD environment variable present. Entering password.")
+    password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
+    password_input.send_keys(password)
+    password_input.send_keys(Keys.ENTER)
+
 def perform_validation(dashboard_base_url):
-    driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
+    # driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
     driver.set_window_size(1920,1080)
     dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
