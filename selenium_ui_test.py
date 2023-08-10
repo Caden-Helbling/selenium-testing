@@ -44,22 +44,21 @@ def perform_validation(dashboard_base_url):
     driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
     dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-    driver.implicitly_wait(5) # Waits for the page to load
+    driver.implicitly_wait(3) # Wait for element to load before throwing an error
 
     # Check whether a password has been provided and enter it if required
     if password:
         print("UI_PASSWORD environment variable present. Entering password.")
-        password_input = driver.find_element(By.XPATH, '/html/body/div/div/div[2]/form/input[2]')
+        password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
 
-    # Load data from .json
+    # Load data from ui_data.json
     with open('ui_data.json') as json_file:
         data = json.load(json_file)
 
-    # Check for logos and their positions
+    # Check main page for logos containing source match in ui_data.json
     logo_src_list = data["logos"]
-
     missing_logos = []
     y_coordinates = []
 
@@ -79,10 +78,9 @@ def perform_validation(dashboard_base_url):
     mad = statistics.mean(absolute_deviations)
     mad_message = mad > 13 # Set mad_message if logos deviate too much out of alignment
 
-    # Navigate to catalog page
+    # Check the catalog page for catalogs matching those in ui_test.json
     driver.get(f"{dashboard_base_url}/data-catalog")
 
-    # Check if catalogs are present
     catalog_list = data["catalogs"]
     missing_catalogs = []
 
@@ -92,7 +90,7 @@ def perform_validation(dashboard_base_url):
         except NoSuchElementException:
             missing_catalogs.append(catalog)
 
-    # Navigate to catalog page
+    # Check the analysis page for datasets
     driver.get(f"{dashboard_base_url}/analysis")
 
     map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
@@ -104,29 +102,25 @@ def perform_validation(dashboard_base_url):
         (-20, 60)
     ]
 
+    # Create a box on the map
     actions = ActionChains(driver)
     for x, y in corner_coordinates:
         actions.move_to_element_with_offset(map_canvas, x, y).click().perform()
 
+    # Press enter after drawing map to signal completion of polygon
     map_canvas.send_keys(Keys.ENTER)
 
+    # Expand the actions drop down and select 10 years
     action_button = driver.find_element(By.XPATH, '//span[contains(text(), "Actions")]/following::button[contains(@class, "StyledButton")]')
     driver.execute_script("arguments[0].click();", action_button)
-
-
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
+    # Check that datasets exist
     missing_datasets = False
-
     try:
         driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
-
     except NoSuchElementException:
         missing_datasets = True
-
-
-    # Close the browser
-    driver.quit()
 
     # Raise exception if any validation fails
     if missing_logos or missing_catalogs or mad_message or missing_datasets:
@@ -134,6 +128,8 @@ def perform_validation(dashboard_base_url):
     else:
         print("Validation successful. All elements are present.")
 
+    # Close the browser
+    driver.quit()
     
 # Retry loop
 max_retries = 3
