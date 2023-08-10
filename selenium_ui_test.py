@@ -122,9 +122,9 @@ def perform_validation(dashboard_base_url):
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
     missing_datasets = False
-    
+
     try:
-        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableTextfake")]')
+        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
 
     except NoSuchElementException:
         missing_datasets = True
