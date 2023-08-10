@@ -44,7 +44,7 @@ def perform_validation(dashboard_base_url):
     driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
     dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-    # driver.implicitly_wait(5) # Waits for the page to load
+    driver.implicitly_wait(5) # Waits for the page to load
 
     # Check whether a password has been provided and enter it if required
     if password:
