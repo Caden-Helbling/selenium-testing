@@ -81,7 +81,6 @@ def perform_validation(dashboard_base_url):
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/data-catalog")
-    # driver.implicitly_wait(5) # Wait for page to load
 
     # Check if catalogs are present
     catalog_list = data["catalogs"]
@@ -95,7 +94,6 @@ def perform_validation(dashboard_base_url):
 
     # Navigate to catalog page
     driver.get(f"{dashboard_base_url}/analysis")
-    # driver.implicitly_wait(5) # Wait for page to load
 
     map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
 
@@ -121,7 +119,7 @@ def perform_validation(dashboard_base_url):
     missing_datasets = False
 
     try:
-        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableTextfake")]')
+        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
 
     except NoSuchElementException:
         missing_datasets = True
