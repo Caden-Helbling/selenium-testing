@@ -13,6 +13,8 @@ options = Options()
 # options.add_argument('--headless') # Run browser in headless mode inside the github runner
 # options.add_argument('--window-size=1920x1080')  # Set window size
 # options.add_argument('--window-size=3840x2160')  # Set window size
+driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
+driver.set_window_size(1920,1080)
 
 class PageValidationException(Exception):
     def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None):
@@ -43,10 +45,10 @@ class PageValidationException(Exception):
         return message
 
 def perform_validation(dashboard_base_url):
-    driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
+    # driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
     dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-    driver.set_window_size(1920,1080)
+    # driver.set_window_size(1920,1080)
     driver.implicitly_wait(3) # Wait for element to load before throwing an error
 
     # Check whether a password has been provided and enter it if required
