@@ -53,7 +53,7 @@ def password_input():
     password_input.send_keys(ui_password)
     password_input.send_keys(Keys.ENTER)
 
-def perform_validation(dashboard_base_url):
+def logo_validation(dashboard_base_url):
     # dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
 
@@ -80,8 +80,11 @@ def perform_validation(dashboard_base_url):
     mean_y = statistics.mean(y_coordinates)
     absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
     mad = statistics.mean(absolute_deviations)
-    mad_message = mad > 13 # Set mad_message if logos deviate too much out of alignment
+    if mad > 13:
+        mad_message = True
+        raise PageValidationException(mad_message=mad_message)
 
+def catalog_verification(dashboard_base_url):
     # Check the catalog page for catalogs matching those in ui_test.json
     driver.get(f"{dashboard_base_url}/data-catalog")
 
@@ -90,10 +93,12 @@ def perform_validation(dashboard_base_url):
 
     for catalog in catalog_list:
         try:
-            title_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
+            driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
         except NoSuchElementException:
             missing_catalogs.append(catalog)
+            raise PageValidationException(missing_catalogs=missing_catalogs)
 
+def dataset_verification(dashboard_base_url):
     # Check the analysis page for datasets
     driver.get(f"{dashboard_base_url}/analysis")
     time.sleep(3) # Give time for map to fully load and be clickable
@@ -125,7 +130,7 @@ def perform_validation(dashboard_base_url):
     try:
         driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
     except NoSuchElementException:
-        missing_datasets = True
+        raise PageValidationException(missing_datasets=missing_datasets)
 
     # Raise exception if any validation fails
     if missing_logos or missing_catalogs or mad_message or missing_datasets:
@@ -133,18 +138,19 @@ def perform_validation(dashboard_base_url):
     else:
         print("Validation successful. All elements are present.")
 
-    # Close the browser
-    driver.quit()
+# Close the browser
+driver.quit()
 
 # Retry loop
 max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL").rstrip('/') # remove the tailing /
-# dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
 ui_password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
     try:
-        perform_validation(dashboard_base_url)
+        logo_validation(dashboard_base_url)
+        catalog_verification(dashboard_base_url)
+        dataset_verification(dashboard_base_url)
         break  # If validation is successful, break out of the loop
     except PageValidationException as e:
         if retry < max_retries - 1:
