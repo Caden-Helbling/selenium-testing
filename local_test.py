@@ -48,10 +48,14 @@ class PageValidationException(Exception):
         return message
 
 def password_input():
-    print("UI_PASSWORD environment variable present. Entering password.")
-    password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
-    password_input.send_keys(ui_password)
-    password_input.send_keys(Keys.ENTER)
+    try:
+        print("UI_PASSWORD environment variable present. Entering password.\n")
+        password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
+        password_input.send_keys(ui_password)
+        password_input.send_keys(Keys.ENTER)
+    except NoSuchElementException as e:
+        print("No password needed on this attempt \n")
+
 
 def logo_validation(dashboard_base_url):
     # dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
@@ -71,6 +75,7 @@ def logo_validation(dashboard_base_url):
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
             missing_logos.append(src)
+            raise PageValidationException(missing_logos=missing_logos)
         else:
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
@@ -132,18 +137,9 @@ def dataset_verification(dashboard_base_url):
     except NoSuchElementException:
         raise PageValidationException(missing_datasets=missing_datasets)
 
-    # Raise exception if any validation fails
-    if missing_logos or missing_catalogs or mad_message or missing_datasets:
-        raise PageValidationException(missing_logos=missing_logos, missing_catalogs=missing_catalogs, mad_message=mad_message, missing_datasets=missing_datasets)
-    else:
-        print("Validation successful. All elements are present.")
-
-# Close the browser
-driver.quit()
-
 # Retry loop
 max_retries = 3
-dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app/"
+dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app"
 ui_password = "partnership"
 
 for retry in range(max_retries):
@@ -159,4 +155,7 @@ for retry in range(max_retries):
             continue
         else:
             # Max retries reached, raise the exception again
-            raise e
+            raise e 
+
+print("Validation successful! All elements found")
+driver.quit()
