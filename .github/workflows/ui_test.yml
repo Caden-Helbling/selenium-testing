@@ -22,8 +22,8 @@ jobs:
       with:
         python-version: 3.x
 
-    - name: Install ChromeDriver installer
-      run: pip install chromedriver-autoinstaller
+    # - name: Install ChromeDriver installer
+    #   run: pip install chromedriver-autoinstaller
       
 
     - name: Install selenium
