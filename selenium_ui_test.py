@@ -93,7 +93,7 @@ def perform_validation(dashboard_base_url):
 
     # Check the analysis page for datasets
     driver.get(f"{dashboard_base_url}/analysis")
-    time.wait(3)
+    time.sleep(3)
     map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
 
     corner_coordinates = [
