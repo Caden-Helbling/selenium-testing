@@ -15,6 +15,10 @@ driver = webdriver.Chrome(options=options) # Set browser drive and pass options 
 driver.set_window_size(1920,1080)
 driver.implicitly_wait(3) # Wait for element to load before throwing an error
 
+# Load data from ui_data.json
+with open('ui_data.json') as json_file:
+    data = json.load(json_file)
+
 class PageValidationException(Exception):
     def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None):
         self.mad_message = mad_message
@@ -44,7 +48,7 @@ class PageValidationException(Exception):
         return message
 
 def password_input():
-    print("UI_PASSWORD environment variable present. Entering ui_password.")
+    print("UI_PASSWORD environment variable present. Entering password.")
     password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
     password_input.send_keys(ui_password)
     password_input.send_keys(Keys.ENTER)
@@ -59,10 +63,6 @@ def perform_validation(dashboard_base_url):
     # Check whether a ui_password has been provided and enter it if required
     if ui_password:
         password_input()
-
-    # Load data from ui_data.json
-    with open('ui_data.json') as json_file:
-        data = json.load(json_file)
 
     # Check main page for logos containing source match in ui_data.json
     logo_src_list = data["logos"]
