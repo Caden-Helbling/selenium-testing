@@ -27,8 +27,8 @@ password_input.send_keys(Keys.ENTER)
 
 time.sleep(3)
 
-# with open("/Users/chelblin/repos/selenium-testing/page.html", "w", encoding='utf-8') as f:
-#     f.write(driver.page_source)
+with open("/Users/chelblin/repos/selenium-testing/page.html", "w", encoding='utf-8') as f:
+    f.write(driver.page_source)
 map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
 # driver.execute_script("arguments[0].scrollIntoView();", map_canvas)
 
