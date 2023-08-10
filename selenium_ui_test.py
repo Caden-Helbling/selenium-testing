@@ -54,11 +54,8 @@ def password_input():
     password_input.send_keys(Keys.ENTER)
 
 def perform_validation(dashboard_base_url):
-    # driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
-    # driver.set_window_size(1920,1080)
-    dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
+    # dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-    # driver.implicitly_wait(3) # Wait for element to load before throwing an error
 
     # Check whether a ui_password has been provided and enter it if required
     if ui_password:
@@ -141,7 +138,8 @@ def perform_validation(dashboard_base_url):
 
 # Retry loop
 max_retries = 3
-dashboard_base_url = os.getenv("DASHBOARD_BASE_URL")
+dashboard_base_url = os.getenv("DASHBOARD_BASE_URL") 
+dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
 ui_password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
