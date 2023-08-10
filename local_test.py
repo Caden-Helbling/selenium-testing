@@ -12,7 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 options = Options()
 # options.add_argument('--headless')
 options.add_argument('--window-size=1920x1080')  # Set window size
-options.add_experimental_option("detach", True)
+# options.add_experimental_option("detach", True)
 
 driver = webdriver.Chrome(options=options)
 
@@ -25,7 +25,8 @@ password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
 password_input.send_keys("partnership")
 password_input.send_keys(Keys.ENTER)
 
-driver.implicitly_wait(5) # Waits for the page to load
+time.sleep(3)
+
 # with open("/Users/chelblin/repos/selenium-testing/page.html", "w", encoding='utf-8') as f:
 #     f.write(driver.page_source)
 map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
