@@ -121,6 +121,8 @@ def perform_validation(dashboard_base_url):
 
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
+    missing_datasets = False
+    
     try:
         driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableTextfake")]')
 
@@ -149,7 +151,7 @@ for retry in range(max_retries):
         break  # If validation is successful, break out of the loop
     except PageValidationException as e:
         if retry < max_retries - 1:
-            print("Validation failed. Retrying...")
+            print("Validation failed. Retrying...\n")
             continue
         else:
             # Max retries reached, raise the exception again
