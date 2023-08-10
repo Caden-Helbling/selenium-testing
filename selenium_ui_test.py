@@ -121,7 +121,7 @@ def perform_validation(dashboard_base_url):
     missing_datasets = False
 
     try:
-        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
+        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableTextfake")]')
 
     except NoSuchElementException:
         missing_datasets = True
