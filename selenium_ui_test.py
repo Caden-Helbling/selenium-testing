@@ -155,7 +155,7 @@ def dataset_verification(dashboard_base_url):
     driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
 
     # Check that dataset loads
-    time.sleep(1)
+    time.sleep(3)
     try:
         driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
         missing_map_datasets = True
@@ -164,7 +164,7 @@ def dataset_verification(dashboard_base_url):
         html_source = driver.page_source
         with open("page.html", "w", encoding="utf-8") as file:
             file.write(html_source)
-            
+
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
         pass
