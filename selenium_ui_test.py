@@ -10,7 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
-options.add_argument('--headless') # Run browser in headless mode inside the github runner
+options.add_experimental_option("detach", True)
+# options.add_argument('--headless') # Run browser in headless mode inside the github runner
 driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
 driver.set_window_size(1920,1080)
 driver.implicitly_wait(3) # Wait for element to load before throwing an error
@@ -20,11 +21,12 @@ with open('ui_data.json') as json_file:
     data = json.load(json_file)
 
 class PageValidationException(Exception):
-    def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None):
+    def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None, missing_map_datasets=None):
         self.mad_message = mad_message
         self.missing_logos = missing_logos
         self.missing_catalogs = missing_catalogs
         self.missing_datasets = missing_datasets
+        self.missing_map_datasets = missing_map_datasets
 
     def __str__(self):
         message = "UI validation failed:\n"
@@ -35,15 +37,18 @@ class PageValidationException(Exception):
                 message += f"  {logo}\n"
 
         if self.missing_catalogs:
-            message += "Missing catalogs:\n"
+            message += "\nMissing catalogs:\n"
             for catalog in self.missing_catalogs:
                 message += f"  {catalog}\n"
         
         if self.mad_message:
-            message += "Logos are out of alignment.\n"
+            message += "\nLogos are out of alignment.\n"
 
         if self.missing_datasets:
-            message += "Datasets are not appearing on analysis page.\n"
+            message += "\nDatasets are not appearing on analysis page.\n"
+
+        if self.missing_map_datasets:
+            message += "\nMap datasets are not being generated properly.\n"
 
         return message
 
@@ -93,6 +98,10 @@ def catalog_verification(dashboard_base_url):
     # Check the catalog page for catalogs matching those in ui_test.json
     driver.get(f"{dashboard_base_url}/data-catalog")
 
+    # Check whether a ui_password has been provided and enter it if required
+    if ui_password:
+        password_input()
+
     catalog_list = data["catalogs"]
     missing_catalogs = []
 
@@ -106,8 +115,13 @@ def catalog_verification(dashboard_base_url):
 def dataset_verification(dashboard_base_url):
     # Check the analysis page for datasets
     driver.get(f"{dashboard_base_url}/analysis")
-    time.sleep(3) # Give time for map to fully load and be clickable
-    map_canvas = driver.find_element(By.XPATH, '//*[@class="mapboxgl-canvas"]')
+
+    # Check whether a ui_password has been provided and enter it if required
+    if ui_password:
+        password_input()
+
+    # time.sleep(3) # Give time for map to fully load and be clickable
+    map_canvas = driver.find_element(By.XPATH, '//canvas[@class="mapboxgl-canvas"]')
 
     # Generate coordinates for corners of the rectangle to be drawn on the map
     corner_coordinates = [
@@ -131,11 +145,23 @@ def dataset_verification(dashboard_base_url):
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
     # Check that datasets exist
-    missing_datasets = False
     try:
-        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
+        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]').click()
     except NoSuchElementException:
+        missing_datasets = True
         raise PageValidationException(missing_datasets=missing_datasets)
+
+    # Generate data sets by clicking generate button
+    driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
+
+    # Check that dataset loads
+    time.sleep(1)
+    try:
+        driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
+        missing_map_datasets = True
+        raise PageValidationException(missing_map_datasets=missing_map_datasets)
+    except NoSuchElementException:
+        pass
 
 # Retry loop
 max_retries = 3
