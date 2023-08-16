@@ -10,8 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
-options.add_experimental_option("detach", True)
-# options.add_argument('--headless') # Run browser in headless mode inside the github runner
+# options.add_experimental_option("detach", True) # For testing. Keeps the browser window open
+options.add_argument('--headless') # Run browser in headless mode inside the github runner
 driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
 driver.set_window_size(1920,1080)
 driver.implicitly_wait(3) # Wait for element to load before throwing an error
