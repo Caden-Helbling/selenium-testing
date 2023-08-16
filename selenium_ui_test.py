@@ -37,18 +37,18 @@ class PageValidationException(Exception):
                 message += f"  {logo}\n"
 
         if self.missing_catalogs:
-            message += "\nMissing catalogs:\n"
+            message += "Missing catalogs:\n"
             for catalog in self.missing_catalogs:
                 message += f"  {catalog}\n"
         
         if self.mad_message:
-            message += "\nLogos are out of alignment.\n"
+            message += "Logos are out of alignment.\n"
 
         if self.missing_datasets:
-            message += "\nDatasets are not appearing on analysis page.\n"
+            message += "Datasets are not appearing on analysis page.\n"
 
         if self.missing_map_datasets:
-            message += "\nMap datasets are not being generated properly.\n"
+            message += "Map datasets are not being generated properly.\n"
 
         return message
 
