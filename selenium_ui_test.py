@@ -155,7 +155,7 @@ def dataset_verification(dashboard_base_url):
     driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
 
     # Check that dataset loads
-    time.sleep(3)
+    time.sleep(5)
     try:
         driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
         missing_map_datasets = True
