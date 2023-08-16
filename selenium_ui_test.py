@@ -157,5 +157,5 @@ for retry in range(max_retries):
             # Max retries reached, raise the exception again
             raise e 
 
-print("Validation successful! All elements found")
+print("Validation successful! All elements found.")
 driver.quit()
