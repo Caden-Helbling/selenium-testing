@@ -15,9 +15,6 @@ driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920, 1080)
 driver.implicitly_wait(3)
 
-
-
-# Load data from ui_data.json
 with open('ui_data.json') as json_file:
     data = json.load(json_file)
 
