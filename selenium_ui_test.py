@@ -133,7 +133,12 @@ for retry in range(max_retries):
         logo_validation(dashboard_base_url)
         catalog_verification(dashboard_base_url)
         dataset_verification(dashboard_base_url)
-        break  # If validation is successful, break out of the loop
+        if encountered_errors:
+            error_message = "\n".join(encountered_errors)
+            raise PageValidationException(custom_message=error_message)
+        else:
+            print("Validation successful! All elements found.")
+
     except PageValidationException as e:
         if retry < max_retries - 1:
             print("Retrying...")
@@ -141,9 +146,9 @@ for retry in range(max_retries):
         else:
             raise e 
 
-if encountered_errors:
-    error_message = "\n".join(encountered_errors)
-    raise PageValidationException(custom_message=error_message)
+# if encountered_errors:
+#     error_message = "\n".join(encountered_errors)
+#     raise PageValidationException(custom_message=error_message)
 
-print("Validation successful! All elements found.")
-driver.quit()
+# print("Validation successful! All elements found.")
+# driver.quit()
