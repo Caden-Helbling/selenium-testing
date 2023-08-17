@@ -99,6 +99,7 @@ def logo_validation(dashboard_base_url):
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
             missing_logos.append(src)
+            save_page()
             raise PageValidationException(missing_logos=missing_logos)
         else:
             for image_element in image_elements:
