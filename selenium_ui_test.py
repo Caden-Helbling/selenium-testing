@@ -98,7 +98,7 @@ def logo_validation(dashboard_base_url):
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
             missing_logos.append(src)
-            save_page("missing-logos.html")
+            # save_page("missing-logos.html")
             raise PageValidationException(missing_logos=missing_logos)
         else:
             for image_element in image_elements:
@@ -129,7 +129,7 @@ def catalog_verification(dashboard_base_url):
             driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
         except NoSuchElementException:
             missing_catalogs.append(catalog)
-            save_page("missing-catalogs.html")
+            # save_page("missing-catalogs.html")
             raise PageValidationException(missing_catalogs=missing_catalogs)
 
 def dataset_verification(dashboard_base_url):
@@ -184,7 +184,7 @@ def dataset_verification(dashboard_base_url):
         missing_map_datasets = True
 
         # Get the current HTML source code of the page and save to a file
-        save_page("missing-map-datasets.html") 
+        # save_page("missing-map-datasets.html") 
 
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
