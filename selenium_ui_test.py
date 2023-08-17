@@ -87,7 +87,7 @@ def logo_validation(dashboard_base_url):
     y_coordinates = []
 
     for src in logo_src_list:
-        src = src.split("/")[-1].split(".")[0]
+        # src = src.split("/")[-1].split(".")[0]
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
             missing_logos.append(src)
