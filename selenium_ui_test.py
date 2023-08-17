@@ -211,7 +211,7 @@ for retry in range(max_retries):
 print(encountered_errors)
 
 if encountered_errors:
-    raise PageValidationException("\n".join(encountered_errors))
+    raise PageValidationException(encountered_errors)
 
 print("Validation successful! All elements found.")
 driver.quit()
