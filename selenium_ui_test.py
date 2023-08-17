@@ -62,15 +62,15 @@ def password_input():
         # print("No password needed on this attempt \n")
         pass
 
-def save_page(directory_name):
+def save_page(filename):
     # Create the directory if it doesn't exist
     output_dir = os.environ["OUTPUT_DIR"]
-    directory_path = os.path.join(output_dir, directory_name)
-    os.makedirs(directory_path, exist_ok=True)
+    # directory_path = os.path.join(output_dir, directory_name)
+    os.makedirs(output_dir, exist_ok=True)
 
     # Save the HTML source to a file within the directory
-    filename = "page.html"
-    file_path = os.path.join(directory_path, filename)
+    # filename = "page.html"
+    file_path = os.path.join(output_dir, filename)
     print("filepath is below:")
     print(file_path)
     html_source = driver.page_source
