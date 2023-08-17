@@ -36,6 +36,7 @@ jobs:
       run: python selenium_ui_test.py
 
     - name: Save HTML
+      if: always()
       uses: actions/upload-artifact@v2
       with:
           name: html-artifact
