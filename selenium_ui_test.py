@@ -166,6 +166,7 @@ def dataset_verification(dashboard_base_url):
 
     # Check that datasets exist
     try:
+        time.sleep(3)
         checkable_form = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
         driver.execute_script("arguments[0].scrollIntoView();", checkable_form)
         checkable_form.click()
