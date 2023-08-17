@@ -33,11 +33,19 @@ jobs:
       env:
         DASHBOARD_BASE_URL: ${{ vars.DASHBOARD_BASE_URL }}
         PASSWORD: ${{ secrets.UI_PASSWORD }}
+        OUTPUT_DIR: ${{ github.workspace }}/output  # Specify the output directory
       run: python selenium_ui_test.py
 
-    - name: Save HTML
+    - name: Upload HTML artifacts
       if: always()
       uses: actions/upload-artifact@v2
       with:
-          name: html-artifact
-          path: page.html
+        name: html-artifacts
+        path: ${{ github.workspace }}/output
+
+    # - name: Save HTML
+    #   if: always()
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #       name: html-artifact
+    #       path: page.html
