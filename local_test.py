@@ -173,13 +173,14 @@ def dataset_verification(dashboard_base_url):
     
 # Retry loop
 max_retries = 3
-dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app"
+# dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app"
+dashboard_base_url = "http://localhost:9000"
 ui_password = "partnership"
 
 for retry in range(max_retries):
     try:
-        # logo_validation(dashboard_base_url)
-        # catalog_verification(dashboard_base_url)
+        logo_validation(dashboard_base_url)
+        catalog_verification(dashboard_base_url)
         dataset_verification(dashboard_base_url)
         break  # If validation is successful, break out of the loop
     except PageValidationException as e:
