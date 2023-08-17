@@ -186,7 +186,7 @@ def dataset_verification(dashboard_base_url):
         save_page("missing-map-datasets.html") 
 
         # raise PageValidationException(missing_map_datasets=missing_map_datasets)
-        encountered_errors.append("Missing map datasets")
+        encountered_errors.append("missing_map_datasets")
     except NoSuchElementException:
         pass
 
