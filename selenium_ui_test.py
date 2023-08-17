@@ -77,6 +77,7 @@ def save_page():
     # Save the HTML source to a file within the directory
     filename = "page.html"
     file_path = os.path.join(directory_path, filename)
+    print("filepath is below:")
     print(file_path)
     html_source = driver.page_source
     with open(file_path, "w", encoding="utf-8") as file:
