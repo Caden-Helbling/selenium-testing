@@ -121,7 +121,6 @@ def dataset_verification(dashboard_base_url):
     if ui_password:
         password_input()
 
-    time.sleep(3) # Give time for map to fully load and be clickable
     map_canvas = driver.find_element(By.XPATH, '//canvas[@class="mapboxgl-canvas"]')
 
     # Generate coordinates for corners of the rectangle to be drawn on the map
@@ -133,6 +132,7 @@ def dataset_verification(dashboard_base_url):
     ]
 
     # Click to create the rectangle one the map
+    time.sleep(3) # Give time for map to fully load and be clickable
     actions = ActionChains(driver)
     for x, y in corner_coordinates:
         actions.move_to_element_with_offset(map_canvas, x, y).click().perform()
@@ -155,6 +155,7 @@ def dataset_verification(dashboard_base_url):
         raise PageValidationException(missing_datasets=missing_datasets)
 
     # Generate data sets by clicking generate button
+    time.sleep(3)
     driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
 
     # Check that dataset loads
