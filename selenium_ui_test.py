@@ -54,12 +54,13 @@ class PageValidationException(Exception):
 
 def password_input():
     try:
-        print("UI_PASSWORD environment variable present. Entering password.\n")
+        # print("UI_PASSWORD environment variable present. Entering password.\n")
         password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
         password_input.send_keys(ui_password)
         password_input.send_keys(Keys.ENTER)
     except NoSuchElementException as e:
-        print("No password needed on this attempt \n")
+        # print("No password needed on this attempt \n")
+        pass
 
 
 def logo_validation(dashboard_base_url):
