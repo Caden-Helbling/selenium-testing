@@ -93,7 +93,7 @@ def logo_validation(dashboard_base_url):
             missing_logos.append(src)
             save_page("missing-logos.html")
             # raise PageValidationException(missing_logos=missing_logos)
-            encountered_errors.append("Missing logos")
+            encountered_errors.append("missing_logos")
         else:
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
@@ -107,7 +107,7 @@ def logo_validation(dashboard_base_url):
         mad_message = True
         save_page("misaligned-logos.html")
         # raise PageValidationException(mad_message=mad_message)
-        encountered_errors.append("Mad message")
+        encountered_errors.append(mad_message=mad_message)
 
 def catalog_verification(dashboard_base_url):
     # Check the catalog page for catalogs matching those in ui_test.json
@@ -127,7 +127,7 @@ def catalog_verification(dashboard_base_url):
             missing_catalogs.append(catalog)
             save_page("missing-catalogs.html")
             # raise PageValidationException(missing_catalogs=missing_catalogs)
-            encountered_errors.append("Missing catalogs")
+            encountered_errors.append(missing_catalogs=missing_catalogs)
 
 def dataset_verification(dashboard_base_url):
     # Check the analysis page for datasets
@@ -170,7 +170,7 @@ def dataset_verification(dashboard_base_url):
     except NoSuchElementException:
         missing_datasets = True
         # raise PageValidationException(missing_datasets=missing_datasets)
-        encountered_errors.append("Missing datasets")
+        encountered_errors.append(missing_datasets=missing_datasets)
 
     # Generate data sets by clicking generate button
     time.sleep(3)
@@ -186,7 +186,7 @@ def dataset_verification(dashboard_base_url):
         save_page("missing-map-datasets.html") 
 
         # raise PageValidationException(missing_map_datasets=missing_map_datasets)
-        encountered_errors.append("missing_map_datasets")
+        encountered_errors.append(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
         pass
 
