@@ -74,7 +74,7 @@ def save_page(filename):
         file.write(html_source)
 
 def logo_validation(dashboard_base_url):
-    # dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
+    dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
 
     # Check whether a ui_password has been provided and enter it if required
