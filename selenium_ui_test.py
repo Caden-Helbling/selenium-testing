@@ -189,7 +189,7 @@ for retry in range(max_retries):
     except PageValidationException as e:
         if retry < max_retries - 1:
             print(e)
-            print("Validation failed. Retrying...\n")
+            print("Validation failed. Retrying...")
             continue
         else:
             # Max retries reached, raise the exception again
