@@ -11,10 +11,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
 # options.add_experimental_option("detach", True) # For testing. Keeps the browser window open
-options.add_argument('--headless') # Run browser in headless mode inside the github runner
+options.add_argument('--headless') # Run browser in headless mode
 driver = webdriver.Chrome(options=options) # Set browser drive and pass options set above
 driver.set_window_size(1920,1080)
-driver.implicitly_wait(3) # Wait for element to load before throwing an error
+driver.implicitly_wait(3) # Wait time provided for an element to load before throwing an error
+
+encountered_errors = []
 
 # Load data from ui_data.json
 with open('ui_data.json') as json_file:
@@ -63,7 +65,6 @@ def password_input():
 def save_page(filename):
     # Create the directory if it doesn't exist
     output_dir = os.environ["OUTPUT_DIR"]
-    # directory_path = os.path.join(output_dir, directory_name)
     os.makedirs(output_dir, exist_ok=True)
 
     # Save the HTML source to a file within the directory
@@ -91,7 +92,8 @@ def logo_validation(dashboard_base_url):
         if not image_elements:
             missing_logos.append(src)
             save_page("missing-logos.html")
-            raise PageValidationException(missing_logos=missing_logos)
+            # raise PageValidationException(missing_logos=missing_logos)
+            encountered_errors.append("Missing logos")
         else:
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
@@ -103,7 +105,9 @@ def logo_validation(dashboard_base_url):
     mad = statistics.mean(absolute_deviations)
     if mad > 13:
         mad_message = True
-        raise PageValidationException(mad_message=mad_message)
+        save_page("misaligned-logos.html")
+        # raise PageValidationException(mad_message=mad_message)
+        encountered_errors.append("Mad message")
 
 def catalog_verification(dashboard_base_url):
     # Check the catalog page for catalogs matching those in ui_test.json
@@ -122,7 +126,8 @@ def catalog_verification(dashboard_base_url):
         except NoSuchElementException:
             missing_catalogs.append(catalog)
             save_page("missing-catalogs.html")
-            raise PageValidationException(missing_catalogs=missing_catalogs)
+            # raise PageValidationException(missing_catalogs=missing_catalogs)
+            encountered_errors.append("Missing catalogs")
 
 def dataset_verification(dashboard_base_url):
     # Check the analysis page for datasets
@@ -164,7 +169,8 @@ def dataset_verification(dashboard_base_url):
         checkable_form.click()
     except NoSuchElementException:
         missing_datasets = True
-        raise PageValidationException(missing_datasets=missing_datasets)
+        # raise PageValidationException(missing_datasets=missing_datasets)
+        encountered_errors.append("Missing datasets")
 
     # Generate data sets by clicking generate button
     time.sleep(3)
@@ -179,7 +185,8 @@ def dataset_verification(dashboard_base_url):
         # Get the current HTML source code of the page and save to a file
         save_page("missing-map-datasets.html") 
 
-        raise PageValidationException(missing_map_datasets=missing_map_datasets)
+        # raise PageValidationException(missing_map_datasets=missing_map_datasets)
+        encountered_errors.append("Missing map datasets")
     except NoSuchElementException:
         pass
 
@@ -190,15 +197,19 @@ ui_password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
     try:
-        # logo_validation(dashboard_base_url)
-        # catalog_verification(dashboard_base_url)
+        logo_validation(dashboard_base_url)
+        catalog_verification(dashboard_base_url)
         dataset_verification(dashboard_base_url)
         break  # If validation is successful, break out of the loop
     except PageValidationException as e:
+        encountered_errors.append(str(e))
         if retry < max_retries - 1:
             continue
         else:
             raise e 
+
+if encountered_errors:
+    raise PageValidationException("\n".join(encountered_errors))
 
 print("Validation successful! All elements found.")
 driver.quit()
