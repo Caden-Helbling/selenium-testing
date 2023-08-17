@@ -22,12 +22,7 @@ with open('ui_data.json') as json_file:
     data = json.load(json_file)
 
 class PageValidationException(Exception):
-    def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None, missing_map_datasets=None, custom_message=None):
-        self.mad_message = mad_message
-        self.missing_logos = missing_logos
-        self.missing_catalogs = missing_catalogs
-        self.missing_datasets = missing_datasets
-        self.missing_map_datasets = missing_map_datasets
+    def __init__(self, custom_message=None):
         self.custom_message = custom_message
 
     def __str__(self):
@@ -35,26 +30,6 @@ class PageValidationException(Exception):
 
         if self.custom_message:
             message += self.custom_message + "\n"
-
-        if self.missing_logos:
-            message += "Missing logos:\n"
-            for logo in self.missing_logos:
-                message += f"  {logo}\n"
-
-        if self.missing_catalogs:
-            message += "Missing catalogs:\n"
-            for catalog in self.missing_catalogs:
-                message += f"  {catalog}\n"
-
-        if self.mad_message:
-            message += "Logos are out of alignment.\n"
-
-        if self.missing_datasets:
-            message += "Datasets are not appearing on analysis page.\n"
-
-        if self.missing_map_datasets:
-            message += "Map datasets are not being generated properly.\n"
-
         return message
 
 def password_input():
