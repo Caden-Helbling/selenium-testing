@@ -134,17 +134,19 @@ for retry in range(max_retries):
         catalog_verification(dashboard_base_url)
         dataset_verification(dashboard_base_url)
         if encountered_errors:
-            error_message = "\n".join(encountered_errors)
-            raise PageValidationException(custom_message=error_message)
+            if retry == max_retries - 1:
+                error_message = "\n".join(encountered_errors)
+                raise PageValidationException(custom_message=error_message)
         else:
             print("Validation successful! All elements found.")
-
+            break
     except PageValidationException as e:
         if retry < max_retries - 1:
             print("Retrying...")
             continue
         else:
-            raise e 
+            raise e
+
 
 # if encountered_errors:
 #     error_message = "\n".join(encountered_errors)
