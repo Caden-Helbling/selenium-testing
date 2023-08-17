@@ -15,7 +15,7 @@ driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920, 1080)
 driver.implicitly_wait(3)
 
-encountered_errors = []
+
 
 # Load data from ui_data.json
 with open('ui_data.json') as json_file:
@@ -129,14 +129,14 @@ dashboard_base_url = os.getenv("DASHBOARD_BASE_URL").rstrip('/')
 ui_password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
+    encountered_errors = []
     try:
         logo_validation(dashboard_base_url)
         catalog_verification(dashboard_base_url)
         dataset_verification(dashboard_base_url)
         if encountered_errors:
-            if retry == max_retries - 1:
-                error_message = "\n".join(encountered_errors)
-                raise PageValidationException(custom_message=error_message)
+            error_message = "\n".join(encountered_errors)
+            raise PageValidationException(custom_message=error_message)
         else:
             print("Validation successful! All elements found.")
             break
@@ -145,8 +145,7 @@ for retry in range(max_retries):
             print("Retrying...")
             continue
         else:
-            raise e
-
+            raise e 
 
 # if encountered_errors:
 #     error_message = "\n".join(encountered_errors)
