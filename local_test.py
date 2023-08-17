@@ -132,6 +132,7 @@ def dataset_verification(dashboard_base_url):
     ]
 
     # Click to create the rectangle one the map
+    time.sleep(3)
     actions = ActionChains(driver)
     for x, y in corner_coordinates:
         actions.move_to_element_with_offset(map_canvas, x, y).click().perform()
@@ -155,11 +156,11 @@ def dataset_verification(dashboard_base_url):
     driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
 
     # Check that dataset loads
-    time.sleep(1)
+    time.sleep(3)
     try:
         driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
         missing_map_datasets = True
-        
+
         # Get the current HTML source code of the page and save to a file
         html_source = driver.page_source
         with open("page.html", "w", encoding="utf-8") as file:

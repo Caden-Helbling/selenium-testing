@@ -120,7 +120,7 @@ def dataset_verification(dashboard_base_url):
     if ui_password:
         password_input()
 
-    # time.sleep(3) # Give time for map to fully load and be clickable
+    time.sleep(3) # Give time for map to fully load and be clickable
     map_canvas = driver.find_element(By.XPATH, '//canvas[@class="mapboxgl-canvas"]')
 
     # Generate coordinates for corners of the rectangle to be drawn on the map
@@ -155,7 +155,7 @@ def dataset_verification(dashboard_base_url):
     driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
 
     # Check that dataset loads
-    time.sleep(5)
+    time.sleep(3)
     try:
         driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
         missing_map_datasets = True
