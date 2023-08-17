@@ -65,6 +65,7 @@ def password_input():
 def save_page():
     # Get the current URL
     current_url = driver.current_url
+    current_url = current_url[:-4]
 
     # Remove '.app' from the end of the URL if it's present
     if current_url.endswith('.app'):
