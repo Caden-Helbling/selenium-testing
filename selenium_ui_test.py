@@ -67,17 +67,10 @@ def save_page(filename):
     os.makedirs(output_dir, exist_ok=True)
 
     # Save the HTML source to a file within the directory
-    # filename = "page.html"
     file_path = os.path.join(output_dir, filename)
-    print("filepath is below:")
-    print(file_path)
     html_source = driver.page_source
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(html_source)
-    
-    # html_source = driver.page_source
-    # with open("page.html", "w", encoding="utf-8") as file:
-    #     file.write(html_source)
 
 def logo_validation(dashboard_base_url):
     # dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
@@ -97,7 +90,7 @@ def logo_validation(dashboard_base_url):
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
             missing_logos.append(src)
-            # save_page("missing-logos.html")
+            save_page("missing-logos.html")
             raise PageValidationException(missing_logos=missing_logos)
         else:
             for image_element in image_elements:
@@ -165,9 +158,9 @@ def dataset_verification(dashboard_base_url):
 
     # Check that datasets exist
     try:
-        time.sleep(3)
+        time.sleep(3) # Give time for datasets to load
         checkable_form = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
-        driver.execute_script("arguments[0].scrollIntoView();", checkable_form)
+        driver.execute_script("arguments[0].scrollIntoView();", checkable_form) # Scroll the form into view
         checkable_form.click()
     except NoSuchElementException:
         missing_datasets = True
