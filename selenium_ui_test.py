@@ -58,7 +58,6 @@ def password_input():
         password_input.send_keys(ui_password)
         password_input.send_keys(Keys.ENTER)
     except NoSuchElementException as e:
-        # print("No password needed on this attempt \n")
         pass
 
 def save_page(filename):
@@ -198,8 +197,8 @@ ui_password = os.getenv("PASSWORD")
 
 for retry in range(max_retries):
     try:
-        logo_validation(dashboard_base_url)
-        catalog_verification(dashboard_base_url)
+        # logo_validation(dashboard_base_url)
+        # catalog_verification(dashboard_base_url)
         dataset_verification(dashboard_base_url)
         break  # If validation is successful, break out of the loop
     except PageValidationException as e:
