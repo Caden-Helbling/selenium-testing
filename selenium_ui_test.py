@@ -66,6 +66,10 @@ def save_page():
     # Get the current URL
     current_url = driver.current_url
 
+    # Remove '.app' from the end of the URL if it's present
+    if current_url.endswith('.app'):
+        current_url = current_url[:-4]
+
     # Extract the directory name from the URL (e.g., example.com)
     directory_name = current_url.split("//")[1].split("/")[0]
 
@@ -190,7 +194,7 @@ def dataset_verification(dashboard_base_url):
         missing_map_datasets = True
 
         # Get the current HTML source code of the page and save to a file
-        save_page()
+        save_page() 
 
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
@@ -209,11 +213,8 @@ for retry in range(max_retries):
         break  # If validation is successful, break out of the loop
     except PageValidationException as e:
         if retry < max_retries - 1:
-            # print(e)
-            # print("Validation failed. Retrying...")
             continue
         else:
-            # Max retries reached, raise the exception again
             raise e 
 
 print("Validation successful! All elements found.")
