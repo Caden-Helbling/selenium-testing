@@ -36,16 +36,16 @@ jobs:
         OUTPUT_DIR: ${{ github.workspace }}/output  # Specify the output directory
       run: python selenium_ui_test.py
 
-    - name: Upload HTML artifacts
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: html-error-page
-        path: ${{ github.workspace }}/output
-
-    # - name: Save HTML
+    # - name: Upload HTML artifacts
     #   if: always()
     #   uses: actions/upload-artifact@v2
     #   with:
-    #       name: html-artifact
-    #       path: page.html
+    #     name: html-error-page
+    #     path: ${{ github.workspace }}/output
+
+    - name: Save HTML
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+          name: html-artifact
+          path: page.html

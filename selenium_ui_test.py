@@ -63,22 +63,26 @@ def password_input():
         pass
 
 def save_page():
-    # Get the current URL
-    current_url = driver.current_url
+    # # Get the current URL
+    # current_url = driver.current_url
 
-    # Extract the directory name from the URL (e.g., example.com)
-    directory_name = current_url.split("//")[1].split("/")[0]
+    # # Extract the directory name from the URL (e.g., example.com)
+    # directory_name = current_url.split("//")[1].split("/")[0]
 
-    # Create the directory if it doesn't exist
-    output_dir = os.environ["OUTPUT_DIR"]
-    directory_path = os.path.join(output_dir, directory_name)
-    os.makedirs(directory_path, exist_ok=True)
+    # # Create the directory if it doesn't exist
+    # output_dir = os.environ["OUTPUT_DIR"]
+    # directory_path = os.path.join(output_dir, directory_name)
+    # os.makedirs(directory_path, exist_ok=True)
 
-    # Save the HTML source to a file within the directory
-    filename = "page.html"
-    file_path = os.path.join(directory_path, filename)
+    # # Save the HTML source to a file within the directory
+    # filename = "page.html"
+    # file_path = os.path.join(directory_path, filename)
+    # html_source = driver.page_source
+    # with open(file_path, "w", encoding="utf-8") as file:
+    #     file.write(html_source)
+    
     html_source = driver.page_source
-    with open(file_path, "w", encoding="utf-8") as file:
+    with open("page.html", "w", encoding="utf-8") as file:
         file.write(html_source)
 
 def logo_validation(dashboard_base_url):
