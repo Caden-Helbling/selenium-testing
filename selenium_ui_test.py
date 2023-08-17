@@ -169,6 +169,9 @@ def dataset_verification(dashboard_base_url):
 
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
+        html_source = driver.page_source
+        with open("page.html", "w", encoding="utf-8") as file:
+            file.write(html_source)
         pass
 
 # Retry loop
