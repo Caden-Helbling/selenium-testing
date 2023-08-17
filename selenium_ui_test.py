@@ -149,7 +149,7 @@ def dataset_verification(dashboard_base_url):
         pass
 
 # Retry loop
-max_retries = 1
+max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL").rstrip('/')
 ui_password = os.getenv("PASSWORD")
 
