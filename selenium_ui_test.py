@@ -208,6 +208,8 @@ for retry in range(max_retries):
         else:
             raise e 
 
+print(encountered_errors)
+
 if encountered_errors:
     raise PageValidationException("\n".join(encountered_errors))
 
