@@ -62,18 +62,7 @@ def password_input():
         # print("No password needed on this attempt \n")
         pass
 
-def save_page():
-    # Get the current URL
-    current_url = driver.current_url
-    current_url = current_url[:-4]
-
-    # Remove '.app' from the end of the URL if it's present
-    if current_url.endswith('.app'):
-        current_url = current_url[:-4]
-
-    # Extract the directory name from the URL (e.g., example.com)
-    directory_name = current_url.split("//")[1].split("/")[0]
-
+def save_page(directory_name):
     # Create the directory if it doesn't exist
     output_dir = os.environ["OUTPUT_DIR"]
     directory_path = os.path.join(output_dir, directory_name)
@@ -110,7 +99,7 @@ def logo_validation(dashboard_base_url):
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
             missing_logos.append(src)
-            save_page()
+            save_page("missing logo")
             raise PageValidationException(missing_logos=missing_logos)
         else:
             for image_element in image_elements:
@@ -141,6 +130,7 @@ def catalog_verification(dashboard_base_url):
             driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
         except NoSuchElementException:
             missing_catalogs.append(catalog)
+            save_page("missing catalog")
             raise PageValidationException(missing_catalogs=missing_catalogs)
 
 def dataset_verification(dashboard_base_url):
@@ -195,7 +185,7 @@ def dataset_verification(dashboard_base_url):
         missing_map_datasets = True
 
         # Get the current HTML source code of the page and save to a file
-        save_page() 
+        save_page("missing map datasets") 
 
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
