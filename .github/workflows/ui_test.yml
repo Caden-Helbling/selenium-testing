@@ -34,3 +34,9 @@ jobs:
         DASHBOARD_BASE_URL: ${{ vars.DASHBOARD_BASE_URL }}
         PASSWORD: ${{ secrets.UI_PASSWORD }}
       run: python selenium_ui_test.py
+
+    - name: Save HTML
+      uses: actions/upload-artifact@v2
+      with:
+          name: html-artifact
+          path: page.html
