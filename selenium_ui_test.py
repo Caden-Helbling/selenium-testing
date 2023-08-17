@@ -160,6 +160,8 @@ def dataset_verification(dashboard_base_url):
         driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
         missing_map_datasets = True
 
+        print(missing_map_datasets)
+
         # Get the current HTML source code of the page and save to a file
         html_source = driver.page_source
         with open("page.html", "w", encoding="utf-8") as file:
