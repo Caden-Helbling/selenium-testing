@@ -144,11 +144,4 @@ for retry in range(max_retries):
         if retry < max_retries - 1:
             continue
         else:
-            raise e 
-
-# if encountered_errors:
-#     error_message = "\n".join(encountered_errors)
-#     raise PageValidationException(custom_message=error_message)
-
-# print("Validation successful! All elements found.")
-# driver.quit()
+            raise e
