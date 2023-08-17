@@ -147,7 +147,9 @@ def dataset_verification(dashboard_base_url):
 
     # Check that datasets exist
     try:
-        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]').click()
+        checkable_form = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
+        driver.execute_script("arguments[0].scrollIntoView();", checkable_form)
+        checkable_form.click()
     except NoSuchElementException:
         missing_datasets = True
         raise PageValidationException(missing_datasets=missing_datasets)
