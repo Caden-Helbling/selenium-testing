@@ -62,6 +62,11 @@ def password_input():
         # print("No password needed on this attempt \n")
         pass
 
+def save_page():
+    filename = driver.current_url
+    html_source = driver.page_source
+    with open(filename, "w", encoding="utf-8") as file:
+        file.write(html_source)
 
 def logo_validation(dashboard_base_url):
     # dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
@@ -165,15 +170,10 @@ def dataset_verification(dashboard_base_url):
         missing_map_datasets = True
 
         # Get the current HTML source code of the page and save to a file
-        html_source = driver.page_source
-        with open("page.html", "w", encoding="utf-8") as file:
-            file.write(html_source)
+        save_page()
 
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
-        html_source = driver.page_source
-        with open("page.html", "w", encoding="utf-8") as file:
-            file.write(html_source)
         pass
 
 # Retry loop
