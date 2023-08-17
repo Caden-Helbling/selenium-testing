@@ -128,7 +128,7 @@ def catalog_verification(dashboard_base_url):
             driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
         except NoSuchElementException:
             missing_catalogs.append(catalog)
-            # save_page("missing-catalogs.html")
+            save_page("missing-catalogs.html")
             raise PageValidationException(missing_catalogs=missing_catalogs)
 
 def dataset_verification(dashboard_base_url):
