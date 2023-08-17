@@ -184,7 +184,7 @@ def dataset_verification(dashboard_base_url):
         missing_map_datasets = True
 
         # Get the current HTML source code of the page and save to a file
-        # save_page("missing-map-datasets.html") 
+        save_page("missing-map-datasets.html") 
 
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
