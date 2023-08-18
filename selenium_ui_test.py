@@ -10,7 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
-options.add_argument('--headless')
+# options.add_experimental_option("detach", True)
+# options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920, 1080)
 driver.implicitly_wait(3)
@@ -110,6 +111,7 @@ def dataset_verification(dashboard_base_url):
         checkable_form.click()
     except NoSuchElementException:
         encountered_errors.append("Datasets are not appearing on analysis page")
+        save_page("missing-datasets.html")
     time.sleep(3)
     driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
     time.sleep(3)
@@ -121,7 +123,7 @@ def dataset_verification(dashboard_base_url):
         pass
 
 # Retry loop
-max_retries = 1
+max_retries = 3
 dashboard_base_url = os.getenv("DASHBOARD_BASE_URL").rstrip('/')
 ui_password = os.getenv("PASSWORD")
 
