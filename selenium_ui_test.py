@@ -11,7 +11,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 options = Options()
 # options.add_experimental_option("detach", True)
-# options.add_argument('--headless')
+options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 driver.set_window_size(1920, 1080)
 driver.implicitly_wait(3)
