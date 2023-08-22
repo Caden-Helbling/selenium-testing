@@ -44,7 +44,8 @@ def save_page(filename):
     html_source = driver.page_source
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(html_source)
-    driver.save_screenshot_as_file(output_dir, "screenshot.png")
+    screenshot_path = os.path.join(output_dir,"screenshot.png")
+    driver.save_screenshot(screenshot_path)
 
 def logo_validation(dashboard_base_url):
     driver.get(dashboard_base_url)
