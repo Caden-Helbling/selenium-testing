@@ -50,6 +50,7 @@ def save_page(filename):
     driver.set_window_size(original_size['width'], height)
     url = driver.current_url
     driver.get(url)
+    time.sleep(3)
     driver.save_screenshot(screenshot_path)
 
 def logo_validation(dashboard_base_url):
