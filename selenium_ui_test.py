@@ -48,7 +48,7 @@ def save_page(filename):
     original_size = driver.get_window_size()
     height = driver.execute_script("return document.body.parentNode.scrollHeight")
     driver.set_window_size(original_size['width'], height)
-    url = driver.getCurrentUrl()
+    url = driver.current_url
     driver.get(url)
     driver.save_screenshot(screenshot_path)
 
