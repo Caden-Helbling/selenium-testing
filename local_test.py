@@ -46,7 +46,7 @@ def password_input():
         pass
 
 def save_page(filename):
-    output_dir = os.environ["OUTPUT_DIR"]
+    output_dir = "output"
     os.makedirs(output_dir, exist_ok=True)
 
     html_path = os.path.join(output_dir, f"{filename}.html")
@@ -65,7 +65,7 @@ def save_page(filename):
 
 def logo_validation(dashboard_base_url):
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-
+    save_page("test")
     # Check whether a ui_password has been provided and enter it if required
     if ui_password:
         password_input()
