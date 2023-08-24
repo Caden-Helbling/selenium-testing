@@ -24,35 +24,14 @@ with open('ui_data.json') as json_file:
     data = json.load(json_file)
 
 class PageValidationException(Exception):
-    def __init__(self, mad_message=None, missing_logos=None, missing_catalogs=None, missing_datasets=None, missing_map_datasets=None):
-        self.mad_message = mad_message
-        self.missing_logos = missing_logos
-        self.missing_catalogs = missing_catalogs
-        self.missing_datasets = missing_datasets
-        self.missing_map_datasets = missing_map_datasets
+    def __init__(self, custom_message=None):
+        self.custom_message = custom_message
 
     def __str__(self):
         message = "UI validation failed:\n"
 
-        if self.missing_logos:
-            message += "Missing logos:\n"
-            for logo in self.missing_logos:
-                message += f"  {logo}\n"
-
-        if self.missing_catalogs:
-            message += "\nMissing catalogs:\n"
-            for catalog in self.missing_catalogs:
-                message += f"  {catalog}\n"
-        
-        if self.mad_message:
-            message += "\nLogos are out of alignment.\n"
-
-        if self.missing_datasets:
-            message += "\nDatasets are not appearing on analysis page.\n"
-
-        if self.missing_map_datasets:
-            message += "\nMap datasets are not being generated properly.\n"
-
+        if self.custom_message:
+            message += self.custom_message + "\n"
         return message
     
 def wait_for_clickable(element):
@@ -66,9 +45,25 @@ def password_input():
     except NoSuchElementException as e:
         pass
 
+def save_page(filename):
+    output_dir = os.environ["OUTPUT_DIR"]
+    os.makedirs(output_dir, exist_ok=True)
+
+    html_path = os.path.join(output_dir, f"{filename}.html")
+    html_source = driver.page_source
+    with open(html_path, "w", encoding="utf-8") as file:
+        file.write(html_source)
+
+    screenshot_path = os.path.join(output_dir,f"{filename}_screenshot.png")
+    original_size = driver.get_window_size()
+    height = driver.execute_script("return document.body.parentNode.scrollHeight")
+    driver.set_window_size(original_size['width'], height)
+    url = driver.current_url
+    driver.get(url)
+    time.sleep(3)
+    driver.save_screenshot(screenshot_path)
 
 def logo_validation(dashboard_base_url):
-    # dashboard_base_url = dashboard_base_url.rstrip('/') # remove the tailing /
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
 
     # Check whether a ui_password has been provided and enter it if required
@@ -85,7 +80,7 @@ def logo_validation(dashboard_base_url):
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
             missing_logos.append(src)
-            raise PageValidationException(missing_logos=missing_logos)
+            encountered_errors.append(f"Missing logo: {src}")
         else:
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
@@ -96,11 +91,9 @@ def logo_validation(dashboard_base_url):
     absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
     mad = statistics.mean(absolute_deviations)
     if mad > 13:
-        mad_message = True
-        raise PageValidationException(mad_message=mad_message)
+        encountered_errors.append("Logos are out of alignment.")
 
 def catalog_verification(dashboard_base_url):
-    # Check the catalog page for catalogs matching those in ui_test.json
     driver.get(f"{dashboard_base_url}/data-catalog")
 
     # Check whether a ui_password has been provided and enter it if required
@@ -115,7 +108,7 @@ def catalog_verification(dashboard_base_url):
             driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
         except NoSuchElementException:
             missing_catalogs.append(catalog)
-            raise PageValidationException(missing_catalogs=missing_catalogs)
+            encountered_errors.append(f"Missing catalog: {catalog}")
 
 def dataset_verification(dashboard_base_url):
     # Check the analysis page for datasets
@@ -156,12 +149,12 @@ def dataset_verification(dashboard_base_url):
         wait_for_clickable(data_set)
         data_set.click()
     except NoSuchElementException:
-        missing_datasets = True
-        raise PageValidationException(missing_datasets=missing_datasets)
+        encountered_errors.append("Datasets are not appearing on analysis page")
 
     # Generate data sets by clicking generate button
-    driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
-
+    generate_button = driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]')
+    wait_for_clickable(generate_button)
+    generate_button.click()
     # Check that dataset loads
     try:
         WebDriverWait(driver, 30).until(
@@ -171,12 +164,9 @@ def dataset_verification(dashboard_base_url):
         print("Timeout: Loading element did not disappear within the specified time.")
 
     try:
-        time.sleep(3)
         failed_text = driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
         print(failed_text)
-        missing_map_datasets = True
-
-        raise PageValidationException(missing_map_datasets=missing_map_datasets)
+        encountered_errors.append("Map datasets are not being generated properly")
     except NoSuchElementException:
         pass
 
@@ -188,19 +178,19 @@ dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app"
 ui_password = "partnership"
 
 for retry in range(max_retries):
+    encountered_errors = []
     try:
         logo_validation(dashboard_base_url)
         catalog_verification(dashboard_base_url)
         dataset_verification(dashboard_base_url)
-        break  # If validation is successful, break out of the loop
+        if encountered_errors:
+            error_message = "\n".join(encountered_errors)
+            raise PageValidationException(custom_message=error_message)
+        else:
+            print("Validation successful! All elements found.")
+            break
     except PageValidationException as e:
         if retry < max_retries - 1:
-            print(e)
-            print("Validation failed. Retrying...\n")
             continue
         else:
-            # Max retries reached, raise the exception again
-            raise e 
-
-print("Validation successful! All elements found")
-# driver.quit()
+            raise e
