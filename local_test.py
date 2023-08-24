@@ -65,7 +65,6 @@ def save_page(filename):
 
 def logo_validation(dashboard_base_url):
     driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
-    save_page("test")
     # Check whether a ui_password has been provided and enter it if required
     if ui_password:
         password_input()
@@ -147,12 +146,13 @@ def dataset_verification(dashboard_base_url):
     try:
         data_set = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
         wait_for_clickable(data_set)
+        driver.execute_script("arguments[0].scrollIntoView();", data_set)
         data_set.click()
     except NoSuchElementException:
         encountered_errors.append("Datasets are not appearing on analysis page")
 
     # Generate data sets by clicking generate button
-    generate_button = driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]')
+    generate_button = driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton") and contains(text(), "Generate")]')
     wait_for_clickable(generate_button)
     generate_button.click()
     # Check that dataset loads
@@ -161,14 +161,7 @@ def dataset_verification(dashboard_base_url):
             EC.invisibility_of_element_located((By.XPATH, '//p[contains(text(), "loading") or contains(text(), "loaded")]'))
 )
     except TimeoutException:
-        print("Timeout: Loading element did not disappear within the specified time.")
-
-    try:
-        failed_text = driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
-        print(failed_text)
         encountered_errors.append("Map datasets are not being generated properly")
-    except NoSuchElementException:
-        pass
 
     
 # Retry loop
