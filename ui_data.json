@@ -3,12 +3,10 @@
       "epa",
       "nasa",
       "nist",
-      "noaa",
-      "fake"
+      "noaa"
     ],
     "catalogs": [
-      "Methane Emissions",
-      "Fake"
+      "Methane Emissions"
     ]
   }
   

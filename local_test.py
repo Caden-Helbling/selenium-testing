@@ -6,8 +6,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 options = Options()
 options.add_experimental_option("detach", True)
@@ -51,15 +54,17 @@ class PageValidationException(Exception):
             message += "\nMap datasets are not being generated properly.\n"
 
         return message
+    
+def wait_for_clickable(element):
+    return WebDriverWait(driver, 10).until(EC.element_to_be_clickable(element))
 
 def password_input():
     try:
-        print("UI_PASSWORD environment variable present. Entering password.\n")
         password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
         password_input.send_keys(ui_password)
         password_input.send_keys(Keys.ENTER)
     except NoSuchElementException as e:
-        print("No password needed on this attempt \n")
+        pass
 
 
 def logo_validation(dashboard_base_url):
@@ -120,7 +125,6 @@ def dataset_verification(dashboard_base_url):
     if ui_password:
         password_input()
 
-    # time.sleep(3) # Give time for map to fully load and be clickable
     map_canvas = driver.find_element(By.XPATH, '//canvas[@class="mapboxgl-canvas"]')
 
     # Generate coordinates for corners of the rectangle to be drawn on the map
@@ -132,8 +136,9 @@ def dataset_verification(dashboard_base_url):
     ]
 
     # Click to create the rectangle one the map
-    time.sleep(3)
+    # time.sleep(3)
     actions = ActionChains(driver)
+    wait_for_clickable(map_canvas)
     for x, y in corner_coordinates:
         actions.move_to_element_with_offset(map_canvas, x, y).click().perform()
 
@@ -147,7 +152,9 @@ def dataset_verification(dashboard_base_url):
 
     # Check that datasets exist
     try:
-        driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]').click()
+        data_set = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
+        wait_for_clickable(data_set)
+        data_set.click()
     except NoSuchElementException:
         missing_datasets = True
         raise PageValidationException(missing_datasets=missing_datasets)
@@ -156,15 +163,18 @@ def dataset_verification(dashboard_base_url):
     driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton")]').click()
 
     # Check that dataset loads
-    time.sleep(3)
     try:
-        driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
-        missing_map_datasets = True
+        WebDriverWait(driver, 30).until(
+            EC.invisibility_of_element_located((By.XPATH, '//p[contains(text(), "loading") or contains(text(), "loaded")]'))
+)
+    except TimeoutException:
+        print("Timeout: Loading element did not disappear within the specified time.")
 
-        # Get the current HTML source code of the page and save to a file
-        html_source = driver.page_source
-        with open("page.html", "w", encoding="utf-8") as file:
-            file.write(html_source)
+    try:
+        time.sleep(3)
+        failed_text = driver.find_element(By.XPATH, '//p[contains(text(), "failed")]')
+        print(failed_text)
+        missing_map_datasets = True
 
         raise PageValidationException(missing_map_datasets=missing_map_datasets)
     except NoSuchElementException:
@@ -172,9 +182,9 @@ def dataset_verification(dashboard_base_url):
 
     
 # Retry loop
-max_retries = 3
-# dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app"
-dashboard_base_url = "http://localhost:9000"
+max_retries = 1
+dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app"
+# dashboard_base_url = "http://localhost:9000"
 ui_password = "partnership"
 
 for retry in range(max_retries):
