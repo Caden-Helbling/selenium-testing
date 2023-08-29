@@ -41,6 +41,7 @@ def password_input():
     try:
         password_input = driver.find_element(By.XPATH, '//input[@name="password"]')
         password_input.send_keys(ui_password)
+        time.sleep(5)
         password_input.send_keys(Keys.ENTER)
     except NoSuchElementException as e:
         pass
@@ -82,6 +83,8 @@ def logo_validation(dashboard_base_url):
             encountered_errors.append(f"Missing logo: {src}")
         else:
             for image_element in image_elements:
+                driver.execute_script("arguments[0].scrollIntoView();", image_element)
+                time.sleep(3)
                 image_element_y = image_element.location['y']
                 y_coordinates.append(image_element_y)
 
@@ -104,7 +107,9 @@ def catalog_verification(dashboard_base_url):
 
     for catalog in catalog_list:
         try:
-            driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
+            catalog_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
+            driver.execute_script("arguments[0].scrollIntoView();", catalog_element)
+            time.sleep(4)
         except NoSuchElementException:
             missing_catalogs.append(catalog)
             encountered_errors.append(f"Missing catalog: {catalog}")
@@ -128,7 +133,7 @@ def dataset_verification(dashboard_base_url):
     ]
 
     # Click to create the rectangle one the map
-    # time.sleep(3)
+    time.sleep(5)
     actions = ActionChains(driver)
     wait_for_clickable(map_canvas)
     for x, y in corner_coordinates:
@@ -139,31 +144,28 @@ def dataset_verification(dashboard_base_url):
 
     # Expand the actions drop down and select 10 years
     action_button = driver.find_element(By.XPATH, '//span[contains(text(), "Actions")]/following::button[contains(@class, "StyledButton")]')
+    driver.execute_script("arguments[0].scrollIntoView();", action_button)
+    time.sleep(2)
     driver.execute_script("arguments[0].click();", action_button)
+    time.sleep(2)
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
     # Check that datasets exist
-    while True:  # This creates an infinite loop that will keep trying until the condition is met
-        try:
-            data_set = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
-            wait_for_clickable(data_set)
-            driver.execute_script("arguments[0].scrollIntoView();", data_set)
-            data_set.click()
-
-            clicked_button = None
-            try:
-                clicked_button = driver.find_element(By.XPATH, '//a[contains(@variation, "achromic-outline")]')
-            except NoSuchElementException:
-                pass
-
-            if clicked_button:
-                break  # Exit the loop if the condition is met
-        except NoSuchElementException:
-            encountered_errors.append("Datasets are not appearing on the analysis page")
-
+    try:
+        data_set = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
+        driver.execute_script("arguments[0].scrollIntoView();", data_set)
+        time.sleep(5)
+        wait_for_clickable(data_set)
+        time.sleep(5)
+        data_set.click()
+        time.sleep(5)
+    except NoSuchElementException:
+        encountered_errors.append("Datasets are not appearing on analysis page")
 
     # Generate data sets by clicking generate button
     generate_button = driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton") and contains(text(), "Generate")]')
+    driver.execute_script("arguments[0].scrollIntoView();", generate_button)
+    time.sleep(2)
     wait_for_clickable(generate_button)
     generate_button.click()
     # Check that dataset loads
@@ -198,5 +200,3 @@ for retry in range(max_retries):
             continue
         else:
             raise e
-
-driver.quit()
