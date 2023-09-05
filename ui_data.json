@@ -3,10 +3,18 @@
       "epa",
       "nasa",
       "nist",
-      "noaa"
+      "noaa",
+      "fake"
     ],
     "catalogs": [
-      "Methane Emissions"
+      "CASA GFED Land-Atmosphere CO₂ Flux",
+      "CEOS National Top-Down CO₂ Budgets",
+      "EMIT Methane Emission Plumes",
+      "EPA 2012 Gridded Methane Emissions",
+      "ODIAC Fossil Fuel CO₂ Emissions",
+      "SEDAC Gridded World Population Data",
+      "Wetland Methane Emissions, LPJ-wsl Model"
     ]
   }
+
   

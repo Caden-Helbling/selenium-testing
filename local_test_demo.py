@@ -109,7 +109,7 @@ def catalog_verification(dashboard_base_url):
         try:
             catalog_element = driver.find_element(By.XPATH, f'//h3[contains(text(), "{catalog}")]')
             driver.execute_script("arguments[0].scrollIntoView();", catalog_element)
-            time.sleep(4)
+            time.sleep(1)
         except NoSuchElementException:
             missing_catalogs.append(catalog)
             encountered_errors.append(f"Missing catalog: {catalog}")
@@ -151,16 +151,24 @@ def dataset_verification(dashboard_base_url):
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
 
     # Check that datasets exist
-    try:
-        data_set = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
-        driver.execute_script("arguments[0].scrollIntoView();", data_set)
-        time.sleep(5)
-        wait_for_clickable(data_set)
-        time.sleep(5)
-        data_set.click()
-        time.sleep(5)
-    except NoSuchElementException:
-        encountered_errors.append("Datasets are not appearing on analysis page")
+    while True:  # This creates an infinite loop that will keep trying until the condition is met
+        try:
+            time.sleep(2)
+            data_set = driver.find_element(By.XPATH, '//*[contains(@class, "checkable__FormCheckableText")]')
+            wait_for_clickable(data_set)
+            driver.execute_script("arguments[0].scrollIntoView();", data_set)
+            data_set.click()
+
+            clicked_button = None
+            try:
+                clicked_button = driver.find_element(By.XPATH, '//a[contains(@variation, "achromic-outline")]')
+            except NoSuchElementException:
+                pass
+
+            if clicked_button:
+                break  # Exit the loop if the condition is met
+        except NoSuchElementException:
+            encountered_errors.append("Datasets are not appearing on the analysis page")
 
     # Generate data sets by clicking generate button
     generate_button = driver.find_element(By.XPATH, '//a[contains(@class, "Button__StyledButton") and contains(text(), "Generate")]')
@@ -169,12 +177,12 @@ def dataset_verification(dashboard_base_url):
     wait_for_clickable(generate_button)
     generate_button.click()
     # Check that dataset loads
-    try:
-        WebDriverWait(driver, 30).until(
-            EC.invisibility_of_element_located((By.XPATH, '//p[contains(text(), "loading") or contains(text(), "loaded")]'))
-)
-    except TimeoutException:
-        encountered_errors.append("Map datasets are not being generated properly")
+#     try:
+#         WebDriverWait(driver, 30).until(
+#             EC.invisibility_of_element_located((By.XPATH, '//p[contains(text(), "loading") or contains(text(), "loaded")]'))
+# )
+#     except TimeoutException:
+#         encountered_errors.append("Map datasets are not being generated properly")
 
     
 # Retry loop

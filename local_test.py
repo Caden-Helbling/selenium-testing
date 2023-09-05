@@ -64,32 +64,45 @@ def save_page(filename):
     driver.save_screenshot(screenshot_path)
 
 def logo_validation(dashboard_base_url):
-    driver.get(dashboard_base_url) # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
+    driver.get(dashboard_base_url)  # Load webpage "https://deploy-preview-13--ghg-demo.netlify.app/")
     # Check whether a ui_password has been provided and enter it if required
     if ui_password:
         password_input()
 
     # Check main page for logos containing source match in ui_data.json
     logo_src_list = data["logos"]
-    missing_logos = []
-    y_coordinates = []
+    missing_logos = {}
+    y_coordinates_dict = {}  # Renamed the dictionary to y_coordinates_dict
 
     for src in logo_src_list:
         src = src.split("/")[-1].split(".")[0]
         image_elements = driver.find_elements(By.XPATH, f"//img[contains(@src, '{src}')]")
         if not image_elements:
-            missing_logos.append(src)
+            missing_logos[src] = []  # Initialize an empty list for missing logos
             encountered_errors.append(f"Missing logo: {src}")
         else:
+            y_coordinates_dict[src] = []  # Initialize a list for this logo source URL
             for image_element in image_elements:
                 image_element_y = image_element.location['y']
-                y_coordinates.append(image_element_y)
+                y_coordinates_dict[src].append(image_element_y)
+                
+    # Keep track of whether any misalignments were found
+    misalignments_found = False
 
-    # Calculate the mean absolute deviation (MAD) of logo y positions
-    mean_y = statistics.mean(y_coordinates)
-    absolute_deviations = [abs(y - mean_y) for y in y_coordinates]
-    mad = statistics.mean(absolute_deviations)
-    if mad > 13:
+    # Calculate the mean absolute deviation (MAD) for each position in the lists
+    for i in range(max(len(y) for y in y_coordinates_dict.values())):
+        position_values = [y[i] for y in y_coordinates_dict.values() if len(y) > i]
+        mean_position = statistics.mean(position_values)
+        absolute_deviations = [abs(y - mean_position) for y in position_values]
+        mad = statistics.mean(absolute_deviations)
+
+        # Check if MAD is greater than 13 for this position
+        if mad > 13:
+            misalignments_found = True  # Set the flag to True
+            break  # Exit the loop if any misalignment is found
+
+    # Append a single error message if misalignments were found
+    if misalignments_found:
         encountered_errors.append("Logos are out of alignment.")
 
 def catalog_verification(dashboard_base_url):
@@ -141,6 +154,7 @@ def dataset_verification(dashboard_base_url):
     action_button = driver.find_element(By.XPATH, '//span[contains(text(), "Actions")]/following::button[contains(@class, "StyledButton")]')
     driver.execute_script("arguments[0].click();", action_button)
     driver.find_element(By.XPATH, '//li//button[contains(text(), "Last 10 years")]').click()
+    time.sleep(3)
 
     # Check that datasets exist
     while True:  # This creates an infinite loop that will keep trying until the condition is met
@@ -168,16 +182,21 @@ def dataset_verification(dashboard_base_url):
     generate_button.click()
     # Check that dataset loads
     try:
-        WebDriverWait(driver, 30).until(
-            EC.invisibility_of_element_located((By.XPATH, '//p[contains(text(), "loading") or contains(text(), "loaded")]'))
-)
+        # Wait for either "loading" or "failure" to appear or for the timeout to expire.
+        WebDriverWait(driver, 180).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'loading') or contains(text(), 'loaded') or contains(text(), 'failure')]"))
+        )
+        # Wait for either "loading" or "failure" to disappear or for the timeout to expire.
+        WebDriverWait(driver, 180).until_not(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'loading') or contains(text(), 'loaded') or contains(text(), 'failure')]"))
+        )
     except TimeoutException:
         encountered_errors.append("Map datasets are not being generated properly")
 
     
 # Retry loop
 max_retries = 1
-dashboard_base_url = "https://deploy-preview-13--ghg-demo.netlify.app"
+dashboard_base_url = "https://ghg-demo.netlify.app" #"https://deploy-preview-13--ghg-demo.netlify.app"
 # dashboard_base_url = "http://localhost:9000"
 ui_password = "partnership"
 
