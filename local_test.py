@@ -184,11 +184,7 @@ def dataset_verification(dashboard_base_url):
     try:
         # Wait for either "loading" or "failure" to appear or for the timeout to expire.
         WebDriverWait(driver, 180).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'loading') or contains(text(), 'loaded') or contains(text(), 'failure')]"))
-        )
-        # Wait for either "loading" or "failure" to disappear or for the timeout to expire.
-        WebDriverWait(driver, 180).until_not(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'loading') or contains(text(), 'loaded') or contains(text(), 'failure')]"))
+            EC.presence_of_element_located((By.XPATH, "//*[contains(@class, 'recharts-surface')]"))
         )
     except TimeoutException:
         encountered_errors.append("Map datasets are not being generated properly")
