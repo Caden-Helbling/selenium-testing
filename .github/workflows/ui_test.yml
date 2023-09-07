@@ -37,7 +37,7 @@ jobs:
       run: python selenium_ui_test.py
 
     - name: Upload HTML artifacts
-      if: always()
+      if: ${{ github.event.workflow_run.conclusion != 'success' }}
       uses: actions/upload-artifact@v2
       with:
         name: html-error-pages
