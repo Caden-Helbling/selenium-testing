@@ -182,13 +182,11 @@ def dataset_verification(dashboard_base_url):
     generate_button.click()
     # Check that dataset loads
     try:
-        # Wait for either "loading" or "failure" to appear or for the timeout to expire.
         WebDriverWait(driver, 180).until(
             EC.presence_of_element_located((By.XPATH, "//*[contains(@class, 'recharts-surface')]"))
         )
     except TimeoutException:
         encountered_errors.append("Map datasets are not being generated properly")
-
     
 # Retry loop
 max_retries = 1
