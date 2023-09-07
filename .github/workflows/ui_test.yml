@@ -35,10 +35,16 @@ jobs:
         PASSWORD: ${{ secrets.UI_PASSWORD }}
         OUTPUT_DIR: ${{ github.workspace }}/output  # Specify the output directory
       run: python selenium_ui_test.py
+  
+  Artifact_Upload:
+    name: Upload HTML artifacts
+    runs-on: ubuntu-latest
+    needs: Selenium_UI_Testing
 
-    - name: Upload HTML artifacts
-      if: ${{ github.event.workflow_run.conclusion != 'success' }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: html-error-pages
-        path: ${{ github.workspace }}/output
+    steps:
+      - name: Upload artifacts
+        if: ${{ github.event.workflow_run.conclusion != 'success' }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: html-error-pages
+          path: ${{ github.workspace }}/output
